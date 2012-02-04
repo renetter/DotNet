@@ -1,0 +1,11 @@
+<Modules>
+  <Module PersistentId="2B25376F-8D15-4304-A8CF-3AAE32BE05F5" ModuleId="ExploreMVC3" />
+  <Module PersistentId="BDF86875-D057-433E-9AFC-2CDE978DA5C3" ModuleId="ExploreMVC3.Tests" />
+  <Module PersistentId="TechTalk.SpecFlow, Version=1.6.1.0, Culture=neutral, PublicKeyToken=0778194805d6db41" ModuleId="TechTalk.SpecFlow" />
+  <Module PersistentId="WatiN.Core, Version=2.1.0.1196, Culture=neutral, PublicKeyToken=db7cfd3acb5ad44e" ModuleId="WatiN.Core" />
+  <Module PersistentId="5FF19AD9-F8B7-45D1-81D4-E7CBA72174C7" ModuleId="ExploreMVC3.Service.Tests" />
+  <Module PersistentId="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" ModuleId="System" />
+  <Module PersistentId="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" ModuleId="mscorlib" />
+  <Module PersistentId="System.ComponentModel.DataAnnotations, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" ModuleId="System.ComponentModel.DataAnnotations" />
+  <Module PersistentId="AC2D07B7-DCE0-48C1-A75F-939B898BFD14" ModuleId="ExploreMVC3.Infrastructure" />
+</Modules>

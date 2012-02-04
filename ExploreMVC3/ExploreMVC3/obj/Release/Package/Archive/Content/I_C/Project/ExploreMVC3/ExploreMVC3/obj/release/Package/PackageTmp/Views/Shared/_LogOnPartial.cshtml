@@ -1,0 +1,7 @@
+﻿@if(Request.IsAuthenticated) {
+    <text>Welcome <strong>@User.Identity.Name</strong>!
+    [ <a href="javascript: LogOff()">Log Off</a> ]</text>
+}
+else {
+    @:[ <a href="javascript: DisplayLogOnPopup()">Log On</a> ]
+}

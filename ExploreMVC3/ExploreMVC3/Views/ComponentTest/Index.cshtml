@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "Component Test";
+}
+
+<div>
+    <select id="DropDownListTest"></select>    
+</div>
+
+<script src="@Url.Content("~/Scripts/exploremvc-ajaxdropdownlist.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+      $("#DropDownListTest")
+            .dropDownListAjax({
+                    URL: '@Url.Action("TestData1", "ComponentTest")',
+                    onLoaded: function() { alert("loaded called"); }
+                })
+            .change(function() {
+                alert($(this).dropDownListAjax('getExtendedValue', this.value).Key);
+            });
+    });  
+</script>
+
+

@@ -1,0 +1,281 @@
+<Configuration>
+  <UnitTestSessions>
+    <Session>
+      <Name>Session #1</Name>
+      <Elements>
+        <UnitTestElement Provider="MSTest" Id="ExploreMVC3.Tests.Feature.LoginFeature" type="MsTestTestClassElement" TypeName="ExploreMVC3.Tests.Feature.LoginFeature" Project="BDF86875-D057-433E-9AFC-2CDE978DA5C3" />
+        <UnitTestElement Provider="MSTest" Id="ExploreMVC3.Tests.Feature.LoginFeature.ClickTheLogOnLink" ParentId="ExploreMVC3.Tests.Feature.LoginFeature" type="MsTestTestMethodElement" MethodName="ClickTheLogOnLink" Project="BDF86875-D057-433E-9AFC-2CDE978DA5C3" />
+        <UnitTestElement Provider="MSTest" Id="ExploreMVC3.Tests.Feature.LoginFeature.InvalidUserTryingToLogOn" ParentId="ExploreMVC3.Tests.Feature.LoginFeature" type="MsTestTestMethodElement" MethodName="InvalidUserTryingToLogOn" Project="BDF86875-D057-433E-9AFC-2CDE978DA5C3" />
+        <UnitTestElement Provider="MSTest" Id="ExploreMVC3.Tests.Feature.LoginFeature.OpenTheLoginPopupAndThenClickCancel" ParentId="ExploreMVC3.Tests.Feature.LoginFeature" type="MsTestTestMethodElement" MethodName="OpenTheLoginPopupAndThenClickCancel" Project="BDF86875-D057-433E-9AFC-2CDE978DA5C3" />
+        <UnitTestElement Provider="MSTest" Id="ExploreMVC3.Tests.Feature.LoginFeature.PostingTheLoginDetail" ParentId="ExploreMVC3.Tests.Feature.LoginFeature" type="MsTestTestMethodElement" MethodName="PostingTheLoginDetail" Project="BDF86875-D057-433E-9AFC-2CDE978DA5C3" />
+        <UnitTestElement Provider="MSTest" Id="ExploreMVC3.Tests.Feature.LoginFeature.PostingTheLoginDetailWithoutEnteringPassword" ParentId="ExploreMVC3.Tests.Feature.LoginFeature" type="MsTestTestMethodElement" MethodName="PostingTheLoginDetailWithoutEnteringPassword" Project="BDF86875-D057-433E-9AFC-2CDE978DA5C3" />
+        <UnitTestElement Provider="MSTest" Id="ExploreMVC3.Tests.Feature.LoginFeature.PostingTheLoginDetailWithoutEnteringUserName" ParentId="ExploreMVC3.Tests.Feature.LoginFeature" type="MsTestTestMethodElement" MethodName="PostingTheLoginDetailWithoutEnteringUserName" Project="BDF86875-D057-433E-9AFC-2CDE978DA5C3" />
+      </Elements>
+    </Session>
+  </UnitTestSessions>
+  <RecentFiles>
+    <RecentFiles>
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Models/f:AccountModels.cs" caret="1036" fromTop="20" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Controllers/f:AccountController.cs" caret="827" fromTop="12" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/f:Global.asax.cs" caret="361" fromTop="13" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Scripts/f:jquery.validate.js" caret="0" fromTop="0" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Views/d:Account/f:ChangePassword.cshtml" caret="94" fromTop="0" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Views/d:Shared/f:_LogOnPartial.cshtml" caret="0" fromTop="0" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Views/d:Home/f:Index.cshtml" caret="205" fromTop="8" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Views/d:Account/f:Register.cshtml" caret="0" fromTop="0" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Views/d:Account/f:LogOn.cshtml" caret="0" fromTop="0" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Views/d:Shared/f:ValidationMessage.cshtml" caret="0" fromTop="0" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Views/d:Shared/f:Error.cshtml" caret="0" fromTop="0" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Scripts/f:jquery-ui-1.8.11.js" caret="21387" fromTop="11" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Content/d:menu/f:dcmegamenu.css" caret="2778" fromTop="9" />
+      <File id="BDF86875-D057-433E-9AFC-2CDE978DA5C3/d:Feature/f:Login.feature" caret="364" fromTop="13" />
+      <File id="BDF86875-D057-433E-9AFC-2CDE978DA5C3/f:App.config" caret="450" fromTop="14" />
+      <File id="BDF86875-D057-433E-9AFC-2CDE978DA5C3/d:Step Definition/f:LoginFeatureStepDefinition.cs" caret="369" fromTop="9" />
+      <File id="BDF86875-D057-433E-9AFC-2CDE978DA5C3/d:Feature/f:Login.feature.cs" caret="411" fromTop="0" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Scripts/f:jquery.validate-vsdoc.js" caret="2271" fromTop="44" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Scripts/f:modernizr-1.7.js" caret="0" fromTop="0" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Scripts/f:MicrosoftMvcValidation.debug.js" caret="342" fromTop="0" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Scripts/f:MicrosoftMvcValidation.js" caret="13452" fromTop="0" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Scripts/f:jquery.validate.unobtrusive.js" caret="0" fromTop="0" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Scripts/f:jquery.unobtrusive-ajax.js" caret="386" fromTop="0" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Scripts/f:exploremvc-ajaxdropdownlist.js" caret="173" fromTop="7" />
+      <File id="BDF86875-D057-433E-9AFC-2CDE978DA5C3/d:Helper/f:WebBrowser.cs" caret="564" fromTop="16" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Content/f:Site.css" caret="1585" fromTop="10" />
+      <File id="8DFEF79E-1459-4056-93CE-1C7E6BE3EAE4/f:RequiredAttribute.cs" caret="559" fromTop="10" />
+      <File id="8DFEF79E-1459-4056-93CE-1C7E6BE3EAE4/f:pro_dropdown_2.html" caret="766" fromTop="7" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Views/d:Shared/f:_Layout.cshtml" caret="1626" fromTop="26" />
+    </RecentFiles>
+    <RecentEdits>
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Scripts/f:exploremvc-ajaxdropdownlist.js" caret="1238" fromTop="6" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Scripts/f:exploremvc-ajaxdropdownlist.js" caret="32" fromTop="1" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Scripts/f:exploremvc-ajaxdropdownlist.js" caret="111" fromTop="5" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Scripts/f:exploremvc-ajaxdropdownlist.js" caret="338" fromTop="18" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Scripts/f:exploremvc-ajaxdropdownlist.js" caret="3376" fromTop="17" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Content/f:Site.css" caret="6004" fromTop="17" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Content/f:Site.css" caret="6004" fromTop="8" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Content/f:Site.css" caret="4564" fromTop="14" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Content/f:Site.css" caret="2599" fromTop="18" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Content/f:Site.css" caret="2415" fromTop="4" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Content/f:Site.css" caret="2595" fromTop="13" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Content/f:Site.css" caret="2866" fromTop="8" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Views/d:Shared/f:_Layout.cshtml" caret="4361" fromTop="10" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Content/f:Site.css" caret="3158" fromTop="2" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Content/f:Site.css" caret="3405" fromTop="15" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Content/f:Site.css" caret="676" fromTop="9" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Content/f:Site.css" caret="2682" fromTop="11" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Views/d:Shared/f:_Layout.cshtml" caret="1335" fromTop="11" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Views/d:Shared/f:_Layout.cshtml" caret="4361" fromTop="14" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Views/d:Shared/f:_Layout.cshtml" caret="1114" fromTop="4" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Views/d:Shared/f:_Layout.cshtml" caret="318" fromTop="0" />
+      <File id="BDF86875-D057-433E-9AFC-2CDE978DA5C3/d:Feature/f:Login.feature.cs" caret="3698" fromTop="83" />
+      <File id="BDF86875-D057-433E-9AFC-2CDE978DA5C3/f:App.config" caret="392" fromTop="10" />
+      <File id="BDF86875-D057-433E-9AFC-2CDE978DA5C3/d:Feature/f:Login.feature.cs" caret="411" fromTop="0" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Scripts/f:exploremvc-ajaxdropdownlist.js" caret="3320" fromTop="20" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Views/d:Shared/f:_Layout.cshtml" caret="4361" fromTop="13" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Views/d:Shared/f:_Layout.cshtml" caret="4381" fromTop="11" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Views/d:Shared/f:_Layout.cshtml" caret="1749" fromTop="11" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Content/f:Site.css" caret="1866" fromTop="9" />
+      <File id="2B25376F-8D15-4304-A8CF-3AAE32BE05F5/d:Content/f:Site.css" caret="1495" fromTop="4" />
+    </RecentEdits>
+  </RecentFiles>
+  <CompletionStatisticsManager>
+    <ItemStatistics item="CSharpCodeCompletionContext">
+      <Item value="string" priority="191" />
+      <Item value="errorMessage" priority="193" />
+      <Item value="ctor" priority="31" />
+      <Item value="private" priority="63" />
+      <Item value="Browser`0" priority="31" />
+      <Item value="new" priority="159" />
+      <Item value="null" priority="63" />
+      <Item value="browser" priority="128" />
+      <Item value="IE" priority="86" />
+      <Item value="public" priority="63" />
+      <Item value="c" priority="95" />
+      <Item value="FireFox" priority="29" />
+      <Item value="_browser" priority="351" />
+      <Item value="table" priority="127" />
+      <Item value="String`0" priority="31" />
+      <Item value="Label`0" priority="32" />
+      <Item value="label" priority="124" />
+      <Item value="Assert`0" priority="127" />
+      <Item value="foreach" priority="31" />
+      <Item value="tableRow" priority="64" />
+      <Item value="text" priority="31" />
+      <Item value="HttpLocalhost" priority="95" />
+      <Item value="class" priority="31" />
+      <Item value="cls" priority="31" />
+      <Item value="static" priority="31" />
+      <Item value="if" priority="31" />
+      <Item value="return" priority="31" />
+      <Item value="ScenarioContext`0" priority="63" />
+      <Item value="as" priority="31" />
+      <Item value="else" priority="31" />
+      <Item value="WebBrowser`0" priority="159" />
+      <Item value="row" priority="31" />
+      <Item value="li" priority="31" />
+      <Item value="CollectionAssert`0" priority="31" />
+      <Item value="lbl" priority="31" />
+      <Item value="lnk" priority="31" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:WatiN.Core.Browser">
+      <Item value="Link`0" priority="53" />
+      <Item value="Span`0" priority="26" />
+      <Item value="TextField`0" priority="53" />
+      <Item value="Button`0" priority="26" />
+      <Item value="Div`0" priority="80" />
+      <Item value="ListItem`0" priority="26" />
+      <Item value="GoTo`0" priority="26" />
+      <Item value="Close`0" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:WatiN.Core.Link">
+      <Item value="Click`0" priority="80" />
+      <Item value="Text" priority="53" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@WatiN.Core.Find">
+      <Item value="ByLabelText`0" priority="27" />
+      <Item value="ByText`0" priority="79" />
+      <Item value="ById`0" priority="83" />
+      <Item value="ByValue`0" priority="55" />
+      <Item value="ByClass`0" priority="55" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.String">
+      <Item value="Contains`0" priority="134" />
+      <Item value="ToLowerInvariant`0" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@Microsoft.VisualStudio.TestTools.UnitTesting.Assert">
+      <Item value="AreEqual`1" priority="161" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:WatiN.Core.Span">
+      <Item value="Text" priority="53" />
+      <Item value="Matches`0" priority="26" />
+      <Item value="Style" priority="80" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:WatiN.Core.TextField">
+      <Item value="AppendText`0" priority="53" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:TechTalk.SpecFlow.Table">
+      <Item value="Rows" priority="134" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.String">
+      <Item value="Empty" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:WatiN.Core.Button">
+      <Item value="Click`0" priority="53" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:WatiN.Core.Style">
+      <Item value="Display" priority="80" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:WatiN.Core.ListItem">
+      <Item value="Text" priority="107" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:TechTalk.SpecFlow.TableRows">
+      <Item value="Where`1" priority="53" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:WatiN.Core.Div">
+      <Item value="Style" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@TechTalk.SpecFlow.ScenarioContext">
+      <Item value="Current" priority="80" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:TechTalk.SpecFlow.ScenarioContext">
+      <Item value="ContainsKey`0" priority="27" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@ExploreMVC3.Tests.Helper.WebBrowser">
+      <Item value="Current" priority="161" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:WatiN.Core.IE">
+      <Item value="GoTo`0" priority="26" />
+      <Item value="TextField`0" priority="26" />
+      <Item value="Button`0" priority="53" />
+      <Item value="ListItem`0" priority="26" />
+      <Item value="Label`0" priority="26" />
+      <Item value="Link`0" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.IEnumerable`1">
+      <Item value="Select`2" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:WatiN.Core.Label">
+      <Item value="Text" priority="53" />
+    </ItemStatistics>
+    <ItemStatistics item="JavaScriptSpecificContext">
+      <Item value="function" priority="87" />
+      <Item value="jQuery" priority="10" />
+      <Item value="$" priority="79" />
+      <Item value="if" priority="32" />
+      <Item value="options" priority="32" />
+      <Item value="null" priority="21" />
+      <Item value="var" priority="21" />
+      <Item value="this" priority="87" />
+      <Item value="model" priority="21" />
+      <Item value="dropDownList" priority="21" />
+      <Item value="dropDownListModel" priority="43" />
+      <Item value="response" priority="43" />
+      <Item value="$Target" priority="20" />
+      <Item value="Function" priority="10" />
+      <Item value="responseItem" priority="43" />
+      <Item value="DropDownList" priority="10" />
+      <Item value="new" priority="10" />
+      <Item value="content" priority="10" />
+      <Item value="Array" priority="21" />
+      <Item value="arguments" priority="10" />
+      <Item value="JSON" priority="10" />
+      <Item value="return" priority="10" />
+    </ItemStatistics>
+    <ItemStatistics item="JavaScriptSpecificContextQualified">
+      <Item value="post" priority="26" />
+      <Item value="URL" priority="8" />
+      <Item value="Target" priority="17" />
+      <Item value="empty" priority="8" />
+      <Item value="each" priority="8" />
+      <Item value="append" priority="8" />
+      <Item value="val" priority="8" />
+      <Item value="text" priority="8" />
+      <Item value="ExtendedData" priority="8" />
+      <Item value="prototype" priority="35" />
+      <Item value="splice" priority="8" />
+      <Item value="slice" priority="17" />
+    </ItemStatistics>
+    <ItemStatistics item="HtmlCodeCompletionContext">
+      <Item value="grey" priority="12" />
+      <Item value="mega-menu-1" priority="20" />
+      <Item value="u" priority="5" />
+      <Item value="menu" priority="11" />
+      <Item value="id" priority="5" />
+      <Item value="class" priority="17" />
+      <Item value="mega-menu" priority="11" />
+      <Item value="li" priority="5" />
+      <Item value="a" priority="5" />
+      <Item value="href" priority="5" />
+      <Item value="_Layout.cshtml" priority="5" />
+      <Item value="ul" priority="5" />
+      <Item value="light-blue" priority="6" />
+    </ItemStatistics>
+    <ItemStatistics item="CssCodeCompletionContext">
+      <Item value="clear" priority="5" />
+      <Item value="margin" priority="5" />
+      <Item value="height" priority="17" />
+      <Item value="overflow" priority="3" />
+      <Item value="overflow-y" priority="3" />
+      <Item value="auto" priority="4" />
+    </ItemStatistics>
+  </CompletionStatisticsManager>
+  <NAntValidationSettings>
+    <NAntPath value="" />
+  </NAntValidationSettings>
+  <UnitTestRunner>
+    <Providers />
+  </UnitTestRunner>
+  <UnitTestRunnerNUnit>
+    <NUnitInstallDir IsNull="False">
+    </NUnitInstallDir>
+    <UseAddins>Never</UseAddins>
+  </UnitTestRunnerNUnit>
+  <SettingsComponent>
+    <string />
+    <integer />
+    <boolean>
+      <setting name="livetemplates.csharp.usevar">True</setting>
+      <setting name="SolutionAnalysisEnabled">False</setting>
+    </boolean>
+  </SettingsComponent>
+</Configuration>

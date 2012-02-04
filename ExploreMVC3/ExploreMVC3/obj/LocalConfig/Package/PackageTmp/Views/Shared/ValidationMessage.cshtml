@@ -1,0 +1,17 @@
+﻿@using ExploreMVC3.Models
+
+@helper DisplayMessage(ModelBase model)
+{
+    // If there are any message, display it
+    if(model.Messages.Any())
+    {
+        <div class="validation-summary-errors">
+            <ul>
+                @foreach(var message in model.Messages)
+                {
+                    <li>@message</li>
+                }
+            </ul>
+        </div>
+    }
+}

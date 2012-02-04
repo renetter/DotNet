@@ -1,0 +1,103 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<div id="target"></div>
+<input id="reload" type="button" value="Reload"/>
+<input id="reloadFromUrl" type="button" value="Reload from Url"/>
+<input id="newColumn" type="button" value="Add Column" />
+<input id="showHideHidden" type="button" value="Show/Hide hidden column" />
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dynamicgrid.0.1.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.tablesorter.js")"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#target").dynamicGrid({
+            width: "500px",
+            sortingEnabled: true,
+            columns: [{ name: "Month", display: "Month", width: "100px", align: "center", type: "String" },
+                      { name: "Income", display: "Income", width: "100px", align: "center", type: "Number" },
+                      { name: "Expenditure", width: "150px", align: "center", type: "Number" },
+                      { name: "Profit", width: "100px", align: "center", hidden: true, type: "Number" },
+                      { name: "Edit", display: "", width: "100px", customEditor: displayEditButton, displayEditor: true }],
+            contents: [{ Month: "January", Income: 100, Expenditure: 50}],
+            footer: [{ Month: "<B>Total</B>"}],
+            afterContentLoaded: calculateTotal,
+            afterSaveContent: afterSaveContent,
+        });
+
+        $("#reload").click(reloadGrid);
+        $("#reloadFromUrl").click(reloadFromUrl);
+        $("#newColumn").click(addColumn);
+        $("#showHideHidden").click(showHideHiddenColumn);
+    });
+
+    function reloadGrid() {
+        $("#target").dynamicGrid('render');
+    }
+
+    function reloadFromUrl() {
+        $("#target").dynamicGrid('reloadContents', '@Url.Action("GetContents")');
+    }
+
+    function addColumn() {
+        var target = $("#target");
+        target.dynamicGrid('addColumn', { name: "NewColumn", display: "New Column", width: "100px", align: "center" });
+        target.dynamicGrid('setProperty', 'width', "600px");
+        target.dynamicGrid('render');                   
+    }
+
+    function calculateTotal(option) {
+        var totalIncome = 0;
+        var totalExpenditure = 0;
+
+        $.each(option.contents, function (index, element) {
+            totalIncome += element.Income;
+            totalExpenditure += element.Expenditure;
+        });
+
+        option.footer[0].Income = totalIncome;
+        option.footer[0].Expenditure = totalExpenditure;
+        option.footer[0].Profit = totalIncome - totalExpenditure;
+    }
+
+    function afterSaveContent(option) {
+        calculateTotal(option);
+        $("#target").dynamicGrid('render', option);
+    }
+
+    function showHideHiddenColumn() {
+        var target = $("#target");
+        target.dynamicGrid('toggleHiddenColumn', 'Profit');
+    }
+
+    function editRow(index) {
+        var target = $("#target");
+        target.dynamicGrid('setRowEditable', index, true);
+    }
+
+    function saveRow(rowIndex) {
+        var target = $("#target");
+        target.dynamicGrid('save', rowIndex);
+        target.dynamicGrid('setRowEditable', rowIndex, false);
+    }
+
+    function displayEditButton(rowIndex, column) {
+        var span = $("<span />").attr("id", column.name + "[" + rowIndex + "]")
+        var editButton = $("<input type='button'/>")                            
+                            .val("Edit")
+                            .click(function () { editRow(rowIndex) });
+
+        var saveButton = $("<input type='button'/>")
+                            .val("Save")
+                            .click(function () { saveRow(rowIndex) });
+
+        span.append(editButton);
+        span.append(saveButton);
+        
+        return span;
+    }
+</script>
