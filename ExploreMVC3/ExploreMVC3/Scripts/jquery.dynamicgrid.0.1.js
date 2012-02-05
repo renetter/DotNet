@@ -91,7 +91,7 @@
             row.empty();
 
             // Render the editable control
-            createContentColumns(row, rowIndex, option, option.contents[rowIndex], isEditable);
+            createContentCell(row, rowIndex, option, option.contents[rowIndex], isEditable);
         },
 
         addColumn: function (column) {
@@ -286,7 +286,7 @@
             var row = $("<tr></tr>").attr("id", "row" + rowIndex);
 
             // render column contents
-            createContentColumns(row, rowIndex, option, content);
+            createContentCell(row, rowIndex, option, content);
 
             body.append(row);
         });
@@ -298,7 +298,7 @@
         }
     }
 
-    function createContentColumns(row, rowIndex, option, content, isEditable) {
+    function createContentCell(row, rowIndex, option, content, isEditable) {
 
         $.each(option.columns, function (index, column) {
 
@@ -321,8 +321,9 @@
                     row.append(columnElement);
                 } else {
 
-                    if (column.type == "date" && typeof(contentValue) == "object") {
-                        contentValue = contentValue.toLocaleDateString();
+                    // display date with format dd/mm/yyyy. May not work in different culture.
+                    if (column.type == "date" && typeof (contentValue) == "object") {
+                        contentValue = $.datepicker.formatDate("dd/mm/yy", contentValue);
                     }
                     row.append("<td>" + contentValue + "</td>");
                 }
@@ -344,8 +345,10 @@
             case "date": columnEditor = $("<input type='textbox'/>")
                                                 .attr("id", column.name + "[" + rowIndex + "]")
                                                 .css("width", "95%")
-                                                .val(contentValue)
-                                                .datepicker(); break;
+                                                .datepicker();
+                
+                columnEditor.val($.datepicker.formatDate('dd/mm/yy', contentValue));
+                break;
         }
 
         return columnEditor;
@@ -396,7 +399,8 @@
             switch (columnDef.type) {
                 case "number": cellValue = Number(cellValue); break;
                 case "boolean": cellValue = cellValue.toLowerCase() == "true";
-                case "date": cellValue = new Date(cellValue);
+                    // when the cell is set to empty string then don't save it
+                case "date": cellValue = cellValue == "" ? undefined : new Date(cellValue);
             }
 
             // Save cell value to the data
