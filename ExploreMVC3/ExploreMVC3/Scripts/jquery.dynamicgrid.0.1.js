@@ -320,6 +320,10 @@
 
                     row.append(columnElement);
                 } else {
+
+                    if (column.type == "date" && typeof(contentValue) == "object") {
+                        contentValue = contentValue.toLocaleDateString();
+                    }
                     row.append("<td>" + contentValue + "</td>");
                 }
             }
@@ -331,12 +335,17 @@
         var columnEditor;
 
         switch (column.type) {
-            case "Number":
-            case "String": columnEditor = $("<input type='textbox'/>")
+            case "number":
+            case "string": columnEditor = $("<input type='textbox'/>")
                                                 .attr("id", column.name + "[" + rowIndex + "]")
                                                 .css("width", "95%")
-                                                .val(contentValue);
-                break;
+                                                .val(contentValue); break;
+
+            case "date": columnEditor = $("<input type='textbox'/>")
+                                                .attr("id", column.name + "[" + rowIndex + "]")
+                                                .css("width", "95%")
+                                                .val(contentValue)
+                                                .datepicker(); break;
         }
 
         return columnEditor;
@@ -378,25 +387,29 @@
         // Get cell value
         var cellValue = getCellValue(target, row, column);
 
-        // Parse the value based on data type
-        var columnDef = findColumnDef(column, option);
+        // save the value only if the cell has value
+        if (cellValue != undefined && typeof (cellValue) == "string") {
 
-        switch (columnDef.type) {
-            case "Number": cellValue = Number(cellValue); break;
-            case "Boolean": cellValue = cellValue.toLowerCase() == "true";
-            case "Date": cellValue = Date.parse(cellValue);
+            // Parse the value based on data type
+            var columnDef = findColumnDef(column, option);
+
+            switch (columnDef.type) {
+                case "number": cellValue = Number(cellValue); break;
+                case "boolean": cellValue = cellValue.toLowerCase() == "true";
+                case "date": cellValue = new Date(cellValue);
+            }
+
+            // Save cell value to the data
+            option.contents[row][column] = cellValue;
         }
-
-        // Save cell value to the data
-        option.contents[row][column] = cellValue;
     }
 
     function saveRowValue(target, rowNumber, option) {
-        var content = option.contents[rowNumber];
+        var columns = option.columns;
 
-        // Iterate all column in contents data and save its value
-        for (var property in content) {
-            saveCellValue(target, rowNumber, property, option);
+        // Iterate all column to save its value
+        for (var index in columns) {
+            saveCellValue(target, rowNumber, columns[index].name, option);
         }
     }
 

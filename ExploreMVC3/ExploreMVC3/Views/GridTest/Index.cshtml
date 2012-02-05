@@ -12,21 +12,23 @@
 
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dynamicgrid.0.1.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.tablesorter.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery-ui.1.8.11.min.js")"></script>
 <script type="text/javascript">
     $(document).ready(function () {
 
         $("#target").dynamicGrid({
-            width: "500px",
+            width: "800px",
             sortingEnabled: true,
-            columns: [{ name: "Month", display: "Month", width: "100px", align: "center", type: "String" },
-                      { name: "Income", display: "Income", width: "100px", align: "center", type: "Number" },
-                      { name: "Expenditure", width: "150px", align: "center", type: "Number" },
-                      { name: "Profit", width: "100px", align: "center", hidden: true, type: "Number" },
+            columns: [{ name: "Month", display: "Month", width: "100px", align: "center", type: "string" },
+                      { name: "Income", display: "Income", width: "100px", align: "center", type: "number" },
+                      { name: "Expenditure", width: "150px", align: "center", type: "number" },
+                      { name: "Profit", width: "100px", align: "center", hidden: true, type: "number" },
+                      { name: "Audit", width: "100px", align: "center", type: "date" },
                       { name: "Edit", display: "", width: "100px", customEditor: displayEditButton, displayEditor: true }],
             contents: [{ Month: "January", Income: 100, Expenditure: 50}],
             footer: [{ Month: "<B>Total</B>"}],
             afterContentLoaded: calculateTotal,
-            afterSaveContent: afterSaveContent,
+            afterSaveContent: afterSaveContent
         });
 
         $("#reload").click(reloadGrid);
