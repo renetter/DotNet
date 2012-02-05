@@ -19,6 +19,7 @@ namespace ExploreMVC3.Controllers
         [HttpPost]
         public JsonResult GetContents()
         {
+            // Months
             // Month constants
             string [] months = new string[12] {"January","Febuary","March", 
                                                "April","May","June",
