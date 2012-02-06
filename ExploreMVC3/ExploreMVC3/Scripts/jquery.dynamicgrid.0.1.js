@@ -259,7 +259,7 @@
                     // Use the column name if the display property is not set
                     var displayedColumn = column.display == undefined ? column.name : column.display;
 
-                    var th = $("<th>" + displayedColumn + "</th>");
+                    var th = $("<th id='" + column.name + "'>" + displayedColumn + "</th>");
 
                     if (column.width != undefined) {
                         th.css('width', column.width);
@@ -308,14 +308,14 @@
 
                 // if the row is editable
                 if (column.displayEditor == true || isEditable == true) {
-                    var columnElement = $("<td></td");
+                    var columnElement = $("<td></td").css("padding","0px");
 
                     // Call the custom editor if defined
                     if (column.customEditor != undefined && typeof (column.customEditor) == "function") {
                         // append the custom editor to the column
-                        columnElement.html(column.customEditor(rowIndex, column, contentValue, isEditable, option));
+                        column.customEditor(columnElement, rowIndex, column, contentValue, isEditable, option);
                     } else {
-                        columnElement.append(createEditor(rowIndex, column, contentValue, isEditable, option));
+                        createEditor(columnElement, rowIndex, column, contentValue, isEditable, option);
                     }
 
                     row.append(columnElement);
@@ -331,23 +331,44 @@
         });
     }
 
-    function createEditor(rowIndex, column, contentValue, isEditable, option) {
+    function createEditor(targetColumn, rowIndex, column, contentValue, isEditable, option) {
 
         var columnEditor;
 
         switch (column.type) {
             case "number":
+            case "number?":
             case "string": columnEditor = $("<input type='textbox'/>")
                                                 .attr("id", column.name + "[" + rowIndex + "]")
                                                 .css("width", "95%")
-                                                .val(contentValue); break;
+                                                .val(contentValue);
+                // Append the editor to its parent content
+                targetColumn.append(columnEditor);
+                break;
 
-            case "date": columnEditor = $("<input type='textbox'/>")
+            case "date":
+                // Date label
+                var dateLabel = $("<span>[dd/mm/yyyy]</span>").css('color', 'purple');
+
+                columnEditor = $("<input type='textbox'/>")
                                                 .attr("id", column.name + "[" + rowIndex + "]")
-                                                .css("width", "95%")
-                                                .datepicker();
-                
-                columnEditor.val($.datepicker.formatDate('dd/mm/yy', contentValue));
+                                                .css("width", "100%");
+
+                // Append the editor to its parent content
+                targetColumn.append(columnEditor);
+
+                // Append the date time format
+                //targetColumn.append(dateLabel);
+
+                var width = $("#" + column.name).width() - (dateLabel.outerWidth());
+                alert(width);
+
+                // Init date picker and assign value with date formatting
+                columnEditor.datepicker()
+                            .val($.datepicker.formatDate('dd/mm/yy', contentValue))
+                            .css("width", width);
+
+
                 break;
         }
 
@@ -398,8 +419,10 @@
 
             switch (columnDef.type) {
                 case "number": cellValue = Number(cellValue); break;
+                // Nullable number           
+                case "number?": cellValue = cellValue == "" ? undefined : Number(cellValue); break;
                 case "boolean": cellValue = cellValue.toLowerCase() == "true";
-                    // when the cell is set to empty string then don't save it
+                    // When the cell is set to empty string then don't save it
                 case "date": cellValue = cellValue == "" ? undefined : new Date(cellValue);
             }
 

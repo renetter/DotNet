@@ -17,13 +17,13 @@
     $(document).ready(function () {
 
         $("#target").dynamicGrid({
-            width: "800px",
+            width: "700px",
             sortingEnabled: true,
             columns: [{ name: "Month", display: "Month", width: "100px", align: "center", type: "string" },
                       { name: "Income", display: "Income", width: "100px", align: "center", type: "number" },
                       { name: "Expenditure", width: "150px", align: "center", type: "number" },
-                      { name: "Profit", width: "100px", align: "center", hidden: true, type: "number" },
-                      { name: "Audit", width: "100px", align: "center", type: "date" },
+                      { name: "Profit", width: "100px", align: "center", hidden: true, type: "number?" },
+                      { name: "Audit", width: "1000px", align: "center", type: "date" },
                       { name: "Edit", display: "", width: "100px", customEditor: displayEditButton, displayEditor: true }],
             contents: [{ Month: "January", Income: 100, Expenditure: 50}],
             footer: [{ Month: "<B>Total</B>"}],
@@ -48,7 +48,6 @@
     function addColumn() {
         var target = $("#target");
         target.dynamicGrid('addColumn', { name: "NewColumn", display: "New Column", width: "100px", align: "center" });
-        target.dynamicGrid('setProperty', 'width', "600px");
         target.dynamicGrid('render');                   
     }
 
@@ -87,7 +86,7 @@
         target.dynamicGrid('setRowEditable', rowIndex, false);
     }
 
-    function displayEditButton(rowIndex, column) {
+    function displayEditButton(targetColumn, rowIndex, column) {
         var span = $("<span />").attr("id", column.name + "[" + rowIndex + "]")
         var editButton = $("<input type='button'/>")                            
                             .val("Edit")
@@ -99,7 +98,7 @@
 
         span.append(editButton);
         span.append(saveButton);
-        
-        return span;
+
+        targetColumn.append(span);
     }
 </script>
