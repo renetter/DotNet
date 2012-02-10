@@ -2,6 +2,18 @@
 
     var dynamicGrid = {
         init: function (option) {
+            // save the target id
+            option.id = this.attr("id");
+
+            // save width
+            option.width = 0;
+
+            $.each(option.columns, function (index, column) {
+                if (!column.hidden) {
+                    option.width += column.width;
+                }
+            });
+
             // save the option to the target
             saveOption(this, option);
 
@@ -204,24 +216,18 @@
         // Clear the target elements
         target.empty();
 
-        // Create table element
-        var table = createTableElement();
-
         // Create header
-        createHeader(table, option);
+        createHeader(target, option);
 
         // Create body content if exists
         if (option.contents != undefined) {
-            createBodyContent(table, option);
+            createBodyContent(target, option);
         }
 
         // Create footer if exists
         if (option.footer != undefined) {
-            createFooter(table, option);
+            createFooter(target, option);
         }
-
-        // append the table as target child element
-        target.append(table);
 
         // Post render init
         postRenderInitialization(target, option);
@@ -234,17 +240,31 @@
             table.tablesorter();
             table.addClass('tablesorter');
         }
+    }
+
+    function createTableElement(option) {
+        var tableElement = $("<table></table>").css("table-layout", "fixed");
+
+        return tableElement;
+    }
+
+    function createDivElement(option) {
+        var div = $("<div/>").css("overflow", "auto");
 
         if (option.width != undefined) {
-            table.css('width', option.width);
+            div.width(option.width);            
         }
+
+        return div;
     }
 
-    function createTableElement() {
-        return $("<table></table>");
-    }
+    function createHeader(parentContainer, option) {
+        // Create header div
+        var div = createDivElement(option);
 
-    function createHeader(table, option) {
+        // Create table element
+        var table = createTableElement(option);
+
         // create head element;
         var header = $("<thead></thead>");
 
@@ -276,22 +296,39 @@
 
         header.append(row);
         table.append(header);
+        div.append(table);
+        parentContainer.append(div);
     }
 
-    function createBodyContent(table, option) {
+    function createBodyContent(parentContainer, option) {
+        // create div
+        var div = createDivElement(option);
+
+        if (option.height != null) {
+            div.css("height", option.height);
+        }
+
+        if (option.width != undefined) {
+            div.width(option.width + 20);            
+        }
+
+        // create table
+        var table = createTableElement(option);
+
         // create body element
         var body = $("<tbody></tbody>");
 
+        parentContainer.append(div);
+        div.append(table);
+        table.append(body);
+
         $.each(option.contents, function (rowIndex, content) {
             var row = $("<tr></tr>").attr("id", "row" + rowIndex);
+            body.append(row);
 
             // render column contents
             createContentCell(row, rowIndex, option, content);
-
-            body.append(row);
         });
-
-        table.append(body);
 
         if (option.afterContentLoaded != undefined && typeof (option.afterContentLoaded) == "function") {
             option.afterContentLoaded(option);
@@ -308,7 +345,7 @@
 
                 // if the row is editable
                 if (column.displayEditor == true || isEditable == true) {
-                    var columnElement = $("<td></td").css("padding","0px");
+                    var columnElement = $("<td></td").css("width", column.width);
 
                     // Call the custom editor if defined
                     if (column.customEditor != undefined && typeof (column.customEditor) == "function") {
@@ -325,7 +362,9 @@
                     if (column.type == "date" && typeof (contentValue) == "object") {
                         contentValue = $.datepicker.formatDate("dd/mm/yy", contentValue);
                     }
-                    row.append("<td>" + contentValue + "</td>");
+
+                    var cell = $("<td>" + contentValue + "</td>").css("width", column.width);
+                    row.append(cell);
                 }
             }
         });
@@ -340,7 +379,7 @@
             case "number?":
             case "string": columnEditor = $("<input type='textbox'/>")
                                                 .attr("id", column.name + "[" + rowIndex + "]")
-                                                .css("width", "95%")
+                                                .css("width", column.width)
                                                 .val(contentValue);
                 // Append the editor to its parent content
                 targetColumn.append(columnEditor);
@@ -352,16 +391,18 @@
 
                 columnEditor = $("<input type='textbox'/>")
                                                 .attr("id", column.name + "[" + rowIndex + "]")
-                                                .css("width", "100%");
 
                 // Append the editor to its parent content
                 targetColumn.append(columnEditor);
 
-                // Append the date time format
-                //targetColumn.append(dateLabel);
+                $("#" + option.id).append(dateLabel);
 
                 var width = $("#" + column.name).width() - (dateLabel.outerWidth());
-                alert(width);
+
+                $("#" + option.id).children(":last").remove();
+
+                // Append the date time format
+                targetColumn.append(dateLabel);
 
                 // Init date picker and assign value with date formatting
                 columnEditor.datepicker()
@@ -375,7 +416,16 @@
         return columnEditor;
     }
 
-    function createFooter(table, option) {
+    function createFooter(parentContainer, option) {
+        // create div
+        var div = createDivElement(option);
+        var table = createTableElement(option);
+
+        // append table
+        div.append(table);
+        table.append(footer);
+        parentContainer.append(div);
+
         // create footer element
         var footer = $("<tfoot></tfoot>");
 
@@ -386,8 +436,10 @@
                 // Display contents if its not hidden
                 if (column.hidden != true) {
                     var footerElement = element[column.name] == undefined ? "" : element[column.name];
+                    var td = $("<td>" + footerElement + "</td>");
+                    td.width(column.width);
 
-                    row.append("<td>" + footerElement + "</td>");
+                    row.append(td);
                 }
             });
 
@@ -419,7 +471,7 @@
 
             switch (columnDef.type) {
                 case "number": cellValue = Number(cellValue); break;
-                // Nullable number           
+                // Nullable number                                                       
                 case "number?": cellValue = cellValue == "" ? undefined : Number(cellValue); break;
                 case "boolean": cellValue = cellValue.toLowerCase() == "true";
                     // When the cell is set to empty string then don't save it

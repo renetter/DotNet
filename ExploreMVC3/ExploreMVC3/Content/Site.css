@@ -249,8 +249,7 @@ table.tablesorter thead tr th, table.tablesorter tfoot tr th {
 	background-color: #e6EEEE;
 }
 
-table.tablesorter thead tr .header {
-	background-image: url(images/bg.gif);
+table.tablesorter thead tr .header {	
 	background-repeat: no-repeat;
 	background-position: center right;
 	cursor: pointer;

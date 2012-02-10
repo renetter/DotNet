@@ -3,7 +3,6 @@
 }
 
 <h2>Index</h2>
-
 <div id="target"></div>
 <input id="reload" type="button" value="Reload"/>
 <input id="reloadFromUrl" type="button" value="Reload from Url"/>
@@ -17,14 +16,14 @@
     $(document).ready(function () {
 
         $("#target").dynamicGrid({
-            width: "700px",
-            sortingEnabled: true,
-            columns: [{ name: "Month", display: "Month", width: "100px", align: "center", type: "string" },
-                      { name: "Income", display: "Income", width: "100px", align: "center", type: "number" },
-                      { name: "Expenditure", width: "150px", align: "center", type: "number" },
-                      { name: "Profit", width: "100px", align: "center", hidden: true, type: "number?" },
-                      { name: "Audit", width: "1000px", align: "center", type: "date" },
-                      { name: "Edit", display: "", width: "100px", customEditor: displayEditButton, displayEditor: true }],
+            sortingEnabled: false,
+            height: 100,
+            columns: [{ name: "Month", display: "Month", width: 100, align: "center", type: "string" },
+                      { name: "Income", display: "Income", width: 100, align: "center", type: "number" },
+                      { name: "Expenditure", width: 150, align: "center", type: "number" },
+                      { name: "Profit", width: 100, align: "center", hidden: true, type: "number?" },
+                      { name: "Audit", width: 500, align: "center", type: "date" },
+                      { name: "Edit", display: "", width: 150, customEditor: displayEditButton, displayEditor: true}],
             contents: [{ Month: "January", Income: 100, Expenditure: 50}],
             footer: [{ Month: "<B>Total</B>"}],
             afterContentLoaded: calculateTotal,
