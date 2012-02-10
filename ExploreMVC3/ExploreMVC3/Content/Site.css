@@ -242,6 +242,11 @@ table th {
     border: solid 1px #e8eef4;
 }
 
+.emptyTable {
+    border: solid 1px #e8eef4;
+    border-collapse: collapse;
+}
+
 table.tablesorter {	
 }
 

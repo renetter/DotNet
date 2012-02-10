@@ -1,18 +1,10 @@
 ﻿(function ($) {
+    var emptyColumnMagicNumber = 7;
 
     var dynamicGrid = {
         init: function (option) {
             // save the target id
             option.id = this.attr("id");
-
-            // save width
-            option.width = 0;
-
-            $.each(option.columns, function (index, column) {
-                if (!column.hidden) {
-                    option.width += column.width;
-                }
-            });
 
             // save the option to the target
             saveOption(this, option);
@@ -249,11 +241,7 @@
     }
 
     function createDivElement(option) {
-        var div = $("<div/>").css("overflow", "auto");
-
-        if (option.width != undefined) {
-            div.width(option.width);            
-        }
+        var div = $("<div/>");
 
         return div;
     }
@@ -264,6 +252,9 @@
 
         // Create table element
         var table = createTableElement(option);
+
+        // set table header id
+        table.attr('id', option.id + "tableHeader");
 
         // create head element;
         var header = $("<thead></thead>");
@@ -294,6 +285,11 @@
             });
         }
 
+        // if the table is scrollable, add aditional column to fill empty space above the scrollbar
+        if (option.scrollable == true) {
+            row.append($("<th/>").width(emptyColumnMagicNumber));
+        }
+
         header.append(row);
         table.append(header);
         div.append(table);
@@ -303,14 +299,6 @@
     function createBodyContent(parentContainer, option) {
         // create div
         var div = createDivElement(option);
-
-        if (option.height != null) {
-            div.css("height", option.height);
-        }
-
-        if (option.width != undefined) {
-            div.width(option.width + 20);            
-        }
 
         // create table
         var table = createTableElement(option);
@@ -329,6 +317,29 @@
             // render column contents
             createContentCell(row, rowIndex, option, content);
         });
+
+        // if the table is scrollable
+        if (option.scrollable == true) {
+            if (option.height != null && option.height < table.outerHeight()) {
+                div.css("height", option.height);
+            }
+
+            div.css("overflow-y", "scroll");
+
+
+
+            // check if the content is empty then add new empty row
+            if (option.contents.length == 0) {
+                // set div with based on header width
+                div.width($("#" + option.id + "tableHeader").outerWidth()-2);
+
+                // show border
+                div.addClass("emptyTable");
+            } else {
+                // set div with based on header width
+                div.width($("#" + option.id + "tableHeader").outerWidth());
+            }
+        }
 
         if (option.afterContentLoaded != undefined && typeof (option.afterContentLoaded) == "function") {
             option.afterContentLoaded(option);
@@ -443,6 +454,11 @@
                 }
             });
 
+            // if the table is scrollable, add aditional column to fill empty space above the scrollbar
+            if (option.scrollable == true) {
+                row.append($("<td/>").width(emptyColumnMagicNumber));
+            }
+
             footer.append(row);
         });
 
@@ -471,7 +487,7 @@
 
             switch (columnDef.type) {
                 case "number": cellValue = Number(cellValue); break;
-                // Nullable number                                                       
+                // Nullable number                                                                      
                 case "number?": cellValue = cellValue == "" ? undefined : Number(cellValue); break;
                 case "boolean": cellValue = cellValue.toLowerCase() == "true";
                     // When the cell is set to empty string then don't save it
