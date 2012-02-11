@@ -284,16 +284,17 @@
                 }
             });
         }
-
-        // if the table is scrollable, add aditional column to fill empty space above the scrollbar
-        if (option.scrollable == true) {
-            row.append($("<th/>").width(emptyColumnMagicNumber));
-        }
-
+        
         header.append(row);
         table.append(header);
         div.append(table);
         parentContainer.append(div);
+
+        // if the table is scrollable, add aditional column to fill empty space above the scrollbar
+        if (option.scrollable == true) {
+            row.append($("<th/>").width(emptyColumnMagicNumber));
+            div.width(table.outerWidth());
+        }
     }
 
     function createBodyContent(parentContainer, option) {
@@ -331,7 +332,7 @@
             // check if the content is empty then add new empty row
             if (option.contents.length == 0) {
                 // set div with based on header width
-                div.width($("#" + option.id + "tableHeader").outerWidth()-2);
+                div.width($("#" + option.id + "tableHeader").outerWidth() - 2);
 
                 // show border
                 div.addClass("emptyTable");
@@ -463,6 +464,10 @@
         });
 
         table.append(footer);
+
+        if (option.scrollable == true) {
+            div.width(table.outerWidth());
+        }
     }
 
     function getCellValue(target, row, column) {
@@ -487,7 +492,7 @@
 
             switch (columnDef.type) {
                 case "number": cellValue = Number(cellValue); break;
-                // Nullable number                                                                      
+                // Nullable number                                                                        
                 case "number?": cellValue = cellValue == "" ? undefined : Number(cellValue); break;
                 case "boolean": cellValue = cellValue.toLowerCase() == "true";
                     // When the cell is set to empty string then don't save it
