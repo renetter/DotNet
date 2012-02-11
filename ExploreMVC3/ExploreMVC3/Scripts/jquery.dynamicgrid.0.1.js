@@ -1,5 +1,7 @@
 ﻿(function ($) {
     var emptyColumnMagicNumber = 7;
+    var containerMagicValue = 6;
+    var columnMagicNumber = 2;
 
     var dynamicGrid = {
         init: function (option) {
@@ -11,6 +13,11 @@
 
             // Render the grid based on option
             renderGrid(this, option);
+
+            var $this = this;
+
+            // To fix the width we have to render again, only executes when page refresh
+            $(window).load(function () { renderGrid($this, option) });
 
             return this;
         },
@@ -171,7 +178,7 @@
 
     function findTableRow(target, row) {
         // select the row
-        return target.children("table:first").children("tbody").children("tr[id='row" + row + "']")
+        return $("#row" + row)
     }
 
     function displayColumn(target, option, column, displayed) {
@@ -208,6 +215,9 @@
         // Clear the target elements
         target.empty();
 
+        // Make show the scrollbar when the column is overflow
+        target.css("overflow-x", "auto");
+
         // Create header
         createHeader(target, option);
 
@@ -226,12 +236,8 @@
     }
 
     function postRenderInitialization(target, option) {
-        var table = target.children(':first');
-
-        if (option.sortingEnabled) {
-            table.tablesorter();
-            table.addClass('tablesorter');
-        }
+        // Calculate correct width for header/contents/footer
+        fixDivWidth(target, option);
     }
 
     function createTableElement(option) {
@@ -241,14 +247,69 @@
     }
 
     function createDivElement(option) {
-        var div = $("<div/>");
+        // Initially set the width as big as possible to make the table column fit into the container
+        var div = $("<div/>").width(10000000);
 
         return div;
+    }
+
+    function calculateColumnWidth(option) {
+        var width = 0;
+
+        $.each(option.columns, function () {
+            if (this.hidden != true) {
+                width += this.width + columnMagicNumber;
+            }
+        });
+
+        if (option.scrollable == true) {
+            width += emptyColumnMagicNumber;
+        }
+
+        return width;
+    }
+
+    function fixDivWidth(target, option) {
+
+
+        var divHeader = $("#" + option.id + "divHeader");
+        var divContent = $("#" + option.id + "divContent");
+        var divFooter = $("#" + option.id + "divFooter");
+
+        var tableHeader = $("#" + option.id + "tableHeader");
+        var tableContent = $("#" + option.id + "tableContent");
+        var tableFooter = $("#" + option.id + "tableFooter");
+
+        var width = tableHeader.outerWidth();
+
+        // set div with based on header width
+        divContent.width(width);
+        divHeader.width(width + columnMagicNumber);
+        divFooter.width(width + columnMagicNumber);
+
+        // if the table is scrollable
+        if (option.scrollable == true) {
+            if (option.height != null && option.height < tableContent.outerHeight()) {
+                divContent.css("height", option.height);
+            }
+
+            divContent.css("overflow-y", "scroll");
+
+            // check if the content is empty then add new empty row
+            if (option.contents.length == 0) {
+                // set div with based on header width
+                divContent.width(width - 2);
+
+                // show border
+                divContent.addClass("emptyTable");
+            }
+        }
     }
 
     function createHeader(parentContainer, option) {
         // Create header div
         var div = createDivElement(option);
+        div.attr("id", option.id + "divHeader");
 
         // Create table element
         var table = createTableElement(option);
@@ -280,11 +341,18 @@
                         th.css('text-align', column.align);
                     }
 
+                    // register event to toggle sorting
+                    if (option.sortingEnabled != undefined && column.sortable != false) {
+                        th.click(function () {
+                            toggleSortableColumn(th, column, option);
+                        });
+                    }
+
                     row.append(th);
                 }
             });
         }
-        
+
         header.append(row);
         table.append(header);
         div.append(table);
@@ -293,16 +361,47 @@
         // if the table is scrollable, add aditional column to fill empty space above the scrollbar
         if (option.scrollable == true) {
             row.append($("<th/>").width(emptyColumnMagicNumber));
-            div.width(table.outerWidth());
+        }
+    }
+
+    function toggleSortableColumn(targetHeader, column, option) {
+        // retrieve the option from element
+        var currentOption = getOption($("#" + option.id));
+
+        // togle the sort direction if the active sort column is the current column
+        if (currentOption.sortColumn == column.name) {
+            // toggle sort direction
+            column.sort = (column.sort == "asc") ? "desc" : "asc";
+        } else {
+            // default direction to ascending
+            column.sort = "asc"
+
+            // if previous sort column defined, clear it
+            if (currentOption.sortColumn != undefined) {
+                $("#" + currentOption.sortColumn).removeClass("sortingUp");
+                $("#" + currentOption.sortColumn).removeClass("sortingDown");
+            }
+
+            currentOption.sortColumn = column.name;
+
+            saveOption($("#" + option.id), currentOption);
+        }
+
+        // toggle sort direction
+        switch (column.sort) {
+            case "asc": targetHeader.addClass("sortingUp"); targetHeader.removeClass("sortingDown"); break;
+            case "desc": targetHeader.removeClass("sortingUp"); targetHeader.addClass("sortingDown"); break;
         }
     }
 
     function createBodyContent(parentContainer, option) {
         // create div
         var div = createDivElement(option);
+        div.attr("id", option.id + "divContent");
 
         // create table
         var table = createTableElement(option);
+        table.attr("id", option.id + "tableContent");
 
         // create body element
         var body = $("<tbody></tbody>");
@@ -318,29 +417,6 @@
             // render column contents
             createContentCell(row, rowIndex, option, content);
         });
-
-        // if the table is scrollable
-        if (option.scrollable == true) {
-            if (option.height != null && option.height < table.outerHeight()) {
-                div.css("height", option.height);
-            }
-
-            div.css("overflow-y", "scroll");
-
-
-
-            // check if the content is empty then add new empty row
-            if (option.contents.length == 0) {
-                // set div with based on header width
-                div.width($("#" + option.id + "tableHeader").outerWidth() - 2);
-
-                // show border
-                div.addClass("emptyTable");
-            } else {
-                // set div with based on header width
-                div.width($("#" + option.id + "tableHeader").outerWidth());
-            }
-        }
 
         if (option.afterContentLoaded != undefined && typeof (option.afterContentLoaded) == "function") {
             option.afterContentLoaded(option);
@@ -391,8 +467,9 @@
             case "number?":
             case "string": columnEditor = $("<input type='textbox'/>")
                                                 .attr("id", column.name + "[" + rowIndex + "]")
-                                                .css("width", column.width)
+                                                .css("width", column.width - containerMagicValue)
                                                 .val(contentValue);
+
                 // Append the editor to its parent content
                 targetColumn.append(columnEditor);
                 break;
@@ -409,7 +486,7 @@
 
                 $("#" + option.id).append(dateLabel);
 
-                var width = $("#" + column.name).width() - (dateLabel.outerWidth());
+                var width = column.width - dateLabel.outerWidth() - containerMagicValue;
 
                 $("#" + option.id).children(":last").remove();
 
@@ -431,7 +508,10 @@
     function createFooter(parentContainer, option) {
         // create div
         var div = createDivElement(option);
+        div.attr("id", option.id + "divFooter");
+
         var table = createTableElement(option);
+        table.attr("id", option.id + "tableFooter");
 
         // append table
         div.append(table);
@@ -464,10 +544,6 @@
         });
 
         table.append(footer);
-
-        if (option.scrollable == true) {
-            div.width(table.outerWidth());
-        }
     }
 
     function getCellValue(target, row, column) {
@@ -492,7 +568,7 @@
 
             switch (columnDef.type) {
                 case "number": cellValue = Number(cellValue); break;
-                // Nullable number                                                                        
+                // Nullable number                                                                                                          
                 case "number?": cellValue = cellValue == "" ? undefined : Number(cellValue); break;
                 case "boolean": cellValue = cellValue.toLowerCase() == "true";
                     // When the cell is set to empty string then don't save it

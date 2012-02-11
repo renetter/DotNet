@@ -227,20 +227,52 @@ input[type="submit"] {
 
 table {
     border: solid 1px #e8eef4;
-    border-collapse: collapse;
+    border-collapse: collapse;    
 }
 
-table td {
+table td 
+{    
     padding: 5px;
     border: solid 1px #e8eef4;
 }
 
 table th {
-    padding: 6px 5px;
+    padding: 5px;
     text-align: left;
     background-color: #e8eef4;
     border: solid 1px #e8eef4;
 }
+
+table th:hover, table th.sortingUp:hover, table th.sortingDown:hover
+{
+    background-color: #97B2CD;
+}
+
+
+table th.sortingUp {
+    padding: 5px;
+    text-align: left;
+    background-color: #e8eef4;
+    border: solid 1px #e8eef4;    
+    
+    background-image: url(images/asc.gif);
+    background-repeat: no-repeat;
+    background-position: center right;
+    cursor: pointer;
+}
+
+table th.sortingDown {
+    padding: 5px;
+    text-align: left;
+    background-color: #e8eef4;
+    border: solid 1px #e8eef4;
+    
+    background-image: url(images/desc.gif);
+    background-repeat: no-repeat;
+    background-position: center right;
+    cursor: pointer;
+}
+
 
 .emptyTable {
     border: solid 1px #e8eef4;
