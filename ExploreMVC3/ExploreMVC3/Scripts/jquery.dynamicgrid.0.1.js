@@ -102,7 +102,7 @@
             row.empty();
 
             // Render the editable control
-            createContentCell(row, rowIndex, option, option.contents[rowIndex], isEditable);
+            createRowContents(row, rowIndex, option, option.contents[rowIndex], isEditable);
         },
 
         addColumn: function (column) {
@@ -479,7 +479,7 @@
             body.append(row);
 
             // render column contents
-            createContentCell(row, rowIndex, option, content);
+            createRowContents(row, rowIndex, option, content);
         });
 
         if (option.afterContentLoaded != undefined && typeof (option.afterContentLoaded) == "function") {
@@ -487,103 +487,173 @@
         }
     }
 
-    function createContentCell(row, rowIndex, option, content, isEditable) {
-
+    function createRowContents(row, rowIndex, option, content, isEditable) {
         $.each(option.columns, function (index, column) {
-
-            // Display contents if its not hidden
-            if (column.hidden != true) {
-                // string empty if undefined and the type is not boolean. if boolean return true or false
-                var contentValue = content[column.name] == undefined ? (column.type == "boolean" ? false : "") : content[column.name];
-
-                // if the row is editable
-                if (column.displayEditor == true || isEditable == true) {
-                    var columnElement = $("<td></td").css("width", column.width);
-
-                    // Call the custom editor if defined
-                    if (column.customEditor != undefined && typeof (column.customEditor) == "function") {
-                        // append the custom editor to the column
-                        column.customEditor(columnElement, rowIndex, column, contentValue, isEditable, option);
-                    } else {
-                        createEditor(columnElement, rowIndex, column, contentValue, isEditable, option);
-                    }
-
-                    row.append(columnElement);
-                } else {
-
-                    // display date with format dd/mm/yyyy. May not work in different culture.
-                    if (column.type == "date" && typeof (contentValue) == "object") {
-                        contentValue = $.datepicker.formatDate("dd/mm/yy", contentValue);
-                        var cell = $("<td>" + contentValue + "</td>").css("width", column.width);
-                        row.append(cell);
-
-                    } else if (column.type == "boolean" && typeof (contentValue) == "boolean") {
-                        var columnElement = $("<td></td").css("width", column.width);
-
-                        createEditor(columnElement, rowIndex, column, contentValue, false, option);
-                        row.append(columnElement);
-                    } else {
-                        var cell = $("<td>" + contentValue + "</td>").css("width", column.width);
-                        row.append(cell);
-                    }
-
-
-                }
-            }
+            createContentCell(row, rowIndex, column, content[column.name], isEditable, option);
         });
     }
 
-    function createEditor(targetColumn, rowIndex, column, contentValue, isEditable, option) {
+    function createContentCell(row, rowIndex, column, cellContent, isEditable, option) {
+        // Display contents if its not hidden
+        if (column.hidden != true) {
+            // string empty if undefined and the type is not boolean. if boolean return true or false            
+            var contentValue = cellContent == undefined ? (column.type == "boolean" ? false : "") : cellContent;
 
-        var columnEditor;
+            // if the row is editable
+            if (column.displayEditor == true || isEditable == true) {
+                var columnElement = $("<td></td").css("width", column.width);
+
+                // Call the custom editor if defined
+                if (column.customEditor != undefined && typeof (column.customEditor) == "function") {
+                    // append the custom editor to the column
+                    column.customEditor(columnElement, rowIndex, column, contentValue, isEditable, option);
+                } else {
+                    createEditor(columnElement, rowIndex, column, contentValue, isEditable, option);
+                }
+
+                row.append(columnElement);
+            } else {
+                // display dropdownList if the dropdown list value is defined and the object type is array
+                if (column.dropdownListItems != undefined && Array.isArray(column.dropdownListItems)) {
+                    createDropdownListCell(row, rowIndex, column, contentValue, option);
+                } else if (column.type == "date" && typeof (contentValue) == "object") {
+                    // display date with format dd/mm/yyyy. May not work in different culture.
+                    createDateCell(row, column, contentValue);
+                } else if (column.type == "boolean" && typeof (contentValue) == "boolean") {
+                    createCheckboxCell(row, rowIndex, column, contentValue, option);
+                } else {
+                    createStandardCell(row, column, contentValue);
+                }
+            }
+        }
+    }
+
+    function createDropdownListCell(row, rowIndex, column, contentValue, option) {
+        var cell = $("<td></td").css("width", column.width);
+
+        createEditor(cell, rowIndex, column, contentValue, false, option);
+        row.append(cell);
+    }
+
+    function createDateCell(row, column, contentValue) {
+        contentValue = $.datepicker.formatDate("dd/mm/yy", contentValue);
+        var cell = $("<td>" + contentValue + "</td>").css("width", column.width);
+        row.append(cell);
+    }
+
+    function createCheckboxCell(row, rowIndex, column, contentValue, option) {
+        var cell = $("<td></td").css("width", column.width);
+
+        createEditor(cell, rowIndex, column, contentValue, false, option);
+        row.append(cell);
+    }
+
+    function createStandardCell(row, column, contentValue) {
+        var cell = $("<td>" + contentValue + "</td>").css("width", column.width);
+        row.append(cell);
+    }
+
+    function createEditor(targetColumn, rowIndex, column, contentValue, isEditable, option) {
+        // display dropdownList if the dropdown list value is defined and the object type is array
+        if (column.dropdownListItems != undefined && Array.isArray(column.dropdownListItems)) {
+            return createDropdownList(targetColumn, rowIndex, column, contentValue, isEditable);
+        }
 
         switch (column.type) {
             case "number":
             case "number?":
-            case "string": columnEditor = $("<input type='textbox'/>")
-                                                .attr("id", column.name + "[" + rowIndex + "]")
-                                                .css("width", column.width - containerMagicValue)
-                                                .val(contentValue);
-
-                // Append the editor to its parent content
-                targetColumn.append(columnEditor);
+            case "string":
+                return createTexboxEditor(targetColumn, rowIndex, column, contentValue);
                 break;
-            case "boolean": columnEditor = $("<input type='checkbox'/>")
-                                                .attr("id", column.name + "[" + rowIndex + "]")
-                                                .css("width", column.width - containerMagicValue)
-                                                .attr("checked", contentValue == true)
-                                                .val(contentValue);
-                if (isEditable == false) {
-                    columnEditor.attr("disabled", true);
-                }
-                targetColumn.append(columnEditor);
+
+            case "boolean":
+                return createCheckboxEditor(targetColumn, rowIndex, column, contentValue, isEditable);
                 break;
 
             case "date":
-                // Date label
-                var dateLabel = $("<span>[dd/mm/yyyy]</span>").css('color', 'purple');
-
-                columnEditor = $("<input type='textbox'/>")
-                                                .attr("id", column.name + "[" + rowIndex + "]")
-
-                // Append the editor to its parent content
-                targetColumn.append(columnEditor);
-
-                $("#" + option.id).append(dateLabel);
-
-                var width = column.width - dateLabel.outerWidth() - containerMagicValue;
-
-                $("#" + option.id).children(":last").remove();
-
-                // Append the date time format
-                targetColumn.append(dateLabel);
-
-                // Init date picker and assign value with date formatting
-                columnEditor.datepicker()
-                            .val($.datepicker.formatDate('dd/mm/yy', contentValue))
-                            .css("width", width);
+                return createDateEditor(targetColumn, rowIndex, column, contentValue, option);
                 break;
         }
+    }
+
+    function createTexboxEditor(targetColumn, rowIndex, column, contentValue) {
+        var columnEditor = $("<input type='textbox'/>")
+                            .attr("id", column.name + "[" + rowIndex + "]")
+                            .css("width", column.width - containerMagicValue)
+                            .val(contentValue);
+
+        // Append the editor to its parent content
+        targetColumn.append(columnEditor);
+
+        return columnEditor;
+    }
+
+    function createCheckboxEditor(targetColumn, rowIndex, column, contentValue, isEditable) {
+
+        var columnEditor = $("<input type='checkbox'/>")
+                           .attr("id", column.name + "[" + rowIndex + "]")
+                           .css("width", column.width - containerMagicValue)
+                           .attr("checked", contentValue == true)
+                           .val(contentValue);
+
+        if (isEditable == false) {
+            columnEditor.attr("disabled", true);
+        }
+
+        targetColumn.append(columnEditor);
+
+        return columnEditor;
+    }
+
+    function createDateEditor(targetColumn, rowIndex, column, contentValue, option) {
+        // Date label
+        var dateLabel = $("<span>[dd/mm/yyyy]</span>").css('color', 'purple');
+
+        var columnEditor = $("<input type='textbox'/>")
+                              .attr("id", column.name + "[" + rowIndex + "]");
+
+        // Append the editor to its parent content
+        targetColumn.append(columnEditor);
+
+        $("#" + option.id).append(dateLabel);
+
+        var width = column.width - dateLabel.outerWidth() - containerMagicValue;
+
+        $("#" + option.id).children(":last").remove();
+
+        // Append the date time format
+        targetColumn.append(dateLabel);
+
+        // Init date picker and assign value with date formatting
+        columnEditor.datepicker()
+                    .val($.datepicker.formatDate('dd/mm/yy', contentValue))
+                    .css("width", width);
+
+        return columnEditor;
+    }
+
+    function createDropdownList(targetColumn, rowIndex, column, contentValue, isEditatble) {
+        // select
+        var columnEditor = $("<select/>")
+                             .attr("id", column.name + "[" + rowIndex + "]")
+                             .css("width", column.width - containerMagicValue);
+
+        // create select options
+        $.each(column.dropdownListItems, function () {
+            var option = $("<option>" + this.text + "</option>")
+                             .attr('value', this.value);
+
+            columnEditor.append(option);
+        });
+
+        columnEditor.val(contentValue.toString());
+
+        // disable if its not editable
+        if (isEditatble == false) {
+            columnEditor.attr('disabled', true);
+        }
+
+        targetColumn.append(columnEditor);
 
         return columnEditor;
     }
@@ -633,7 +703,7 @@
         // find the correspondence column
         var column = findColumnDef(columnName, option);
 
-        if (column.type == "boolean") {
+        if (column.type == "boolean" && column.dropdownListItems == undefined) {
             return $("[id='" + columnName + "[" + rowIndex + "]" + "']").attr('checked');
         }
 
@@ -658,10 +728,10 @@
 
             switch (columnDef.type) {
                 case "number": cellValue = Number(cellValue); break;
-                // Nullable number                                                                                                                                                       
+                // Nullable number                                                                                                                                                                                     
                 case "number?": cellValue = cellValue == "" ? undefined : Number(cellValue); break;
-                case "boolean": cellValue = cellValue == true; break;
-                // When the cell is set to empty string then don't save it               
+                case "boolean": cellValue = cellValue == true || cellValue == "true"; break;
+                // When the cell is set to empty string then don't save it                                             
                 case "date": cellValue = cellValue == "" ? undefined : new Date(cellValue);
             }
 

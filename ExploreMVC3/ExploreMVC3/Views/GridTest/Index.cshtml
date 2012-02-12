@@ -1,11 +1,12 @@
 ﻿@{
     ViewBag.Title = "Index";
 }
-
-<h2>Index</h2>
-<div id="target"></div>
-<input id="reload" type="button" value="Reload"/>
-<input id="reloadFromUrl" type="button" value="Reload from Url"/>
+<h2>
+    Index</h2>
+<div id="target">
+</div>
+<input id="reload" type="button" value="Reload" />
+<input id="reloadFromUrl" type="button" value="Reload from Url" />
 <input id="newColumn" type="button" value="Add Column" />
 <input id="showHideHidden" type="button" value="Show/Hide hidden column" />
 
@@ -13,10 +14,10 @@
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.tablesorter.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-ui.1.8.11.min.js")"></script>
 <script type="text/javascript">
-    var months = ["January","Febuary","March", 
-                  "April","May","June",
-                  "July","August","September",
-                  "October","November","December"]
+    var months = ["January", "Febuary", "March",
+                  "April", "May", "June",
+                  "July", "August", "September",
+                  "October", "November", "December"]
 
     $(document).ready(function () {
 
@@ -24,13 +25,19 @@
             sortingEnabled: true,
             scrollable: true,
             height: 100,
-            columns: [{ name: "Month", display: "Month", width: 150, align: "center", type: "string", sortable: true, customSortRule: sortMonths },
+            columns: [{ name: "Month", display: "Month", width: 150, align: "center", type: "string", sortable: true, customSortRule: sortMonths,
+                dropdownListItems: [{ text: "January", value: "January" }, { text: "Febuary", value: "Febuary" }, { text: "March", value: "March" },
+                                    { text: "April", value: "April" }, { text: "May", value: "May" }, { text: "June", value: "June" },
+                                    { text: "July", value: "July" }, { text: "August", value: "August" }, { text: "September", value: "September" },
+                                    { text: "October", value: "October" }, { text: "November", value: "November" }, { text: "December", value: "December"}]
+            },
                       { name: "Income", display: "Income", width: 150, align: "center", type: "number" },
                       { name: "Expenditure", width: 150, align: "center", type: "number" },
                       { name: "Profit", width: 100, align: "center", hidden: true, type: "number?" },
-                      { name: "Audit", width: 700, align: "center", type: "date" },
+                      { name: "Audit", width: 400, align: "center", type: "date" },
                       { name: "Approved", width: 80, align: "center", type: "boolean" },
-                      { name: "Edit", display: "", width: 120, customEditor: displayEditButton, displayEditor: true, sortable: false }],
+                      { name: "Success", width: 80, align: "center", type: "boolean", dropdownListItems: [{ text: "yes", value: true }, { text: "no", value: false}] },
+                      { name: "Edit", display: "", width: 120, customEditor: displayEditButton, displayEditor: true, sortable: false}],
             contents: [{ Month: "January", Income: 100, Expenditure: 50, Approved: true}],
             footer: [{ Month: "<B>Total</B>"}],
             afterContentLoaded: calculateTotal,
@@ -59,7 +66,7 @@
             } else {
                 return -1;
             }
-        } else if( item1Index == item2Index) {
+        } else if (item1Index == item2Index) {
             return 0;
         }
     }
@@ -75,7 +82,7 @@
     function addColumn() {
         var target = $("#target");
         target.dynamicGrid('addColumn', { name: "NewColumn", display: "New Column", width: "100px", align: "center" });
-        target.dynamicGrid('render');                   
+        target.dynamicGrid('render');
     }
 
     function calculateTotal(option) {
@@ -115,7 +122,7 @@
 
     function displayEditButton(targetColumn, rowIndex, column) {
         var span = $("<span />").attr("id", column.name + "[" + rowIndex + "]")
-        var editButton = $("<input type='button'/>")                            
+        var editButton = $("<input type='button'/>")
                             .val("Edit")
                             .click(function () { editRow(rowIndex) });
 
