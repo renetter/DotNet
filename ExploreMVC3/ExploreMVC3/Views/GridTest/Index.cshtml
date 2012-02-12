@@ -13,19 +13,25 @@
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.tablesorter.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-ui.1.8.11.min.js")"></script>
 <script type="text/javascript">
+    var months = ["January","Febuary","March", 
+                  "April","May","June",
+                  "July","August","September",
+                  "October","November","December"]
+
     $(document).ready(function () {
 
         $("#target").dynamicGrid({
-            sortingEnabled: false,
+            sortingEnabled: true,
             scrollable: true,
             height: 100,
-            columns: [{ name: "Month", display: "Month", width: 150, align: "center", type: "string" },
+            columns: [{ name: "Month", display: "Month", width: 150, align: "center", type: "string", sortable: true, customSortRule: sortMonths },
                       { name: "Income", display: "Income", width: 150, align: "center", type: "number" },
                       { name: "Expenditure", width: 150, align: "center", type: "number" },
                       { name: "Profit", width: 100, align: "center", hidden: true, type: "number?" },
                       { name: "Audit", width: 700, align: "center", type: "date" },
+                      { name: "Approved", width: 80, align: "center", type: "boolean" },
                       { name: "Edit", display: "", width: 120, customEditor: displayEditButton, displayEditor: true, sortable: false }],
-            contents: [{ Month: "January", Income: 100, Expenditure: 50}],
+            contents: [{ Month: "January", Income: 100, Expenditure: 50, Approved: true}],
             footer: [{ Month: "<B>Total</B>"}],
             afterContentLoaded: calculateTotal,
             afterSaveContent: afterSaveContent
@@ -36,6 +42,27 @@
         $("#newColumn").click(addColumn);
         $("#showHideHidden").click(showHideHiddenColumn);
     });
+
+    function sortMonths(item1, item2, column) {
+        var item1Index = months.indexOf(item1[column.name]);
+        var item2Index = months.indexOf(item2[column.name]);
+
+        if (item1Index < item2Index) {
+            if (column.sortDirection == "asc") {
+                return -1;
+            } else {
+                return 1;
+            }
+        } else if (item1Index > item2Index) {
+            if (column.sortDirection == "asc") {
+                return 1;
+            } else {
+                return -1;
+            }
+        } else if( item1Index == item2Index) {
+            return 0;
+        }
+    }
 
     function reloadGrid() {
         $("#target").dynamicGrid('render');

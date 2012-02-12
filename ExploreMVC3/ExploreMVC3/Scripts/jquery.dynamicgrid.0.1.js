@@ -238,6 +238,16 @@
     function postRenderInitialization(target, option) {
         // Calculate correct width for header/contents/footer
         fixDivWidth(target, option);
+
+        // Show the sorting icon
+        if (option.sortingEnabled) {
+            for (var index in option.columns) {
+                if (option.columns[index].name == option.sortColumn) {
+                    applySortDirectionStyle($("#" + option.sortColumn), option.columns[index].sortDirection);
+                    break;
+                }
+            }
+        }
     }
 
     function createTableElement(option) {
@@ -270,7 +280,6 @@
     }
 
     function fixDivWidth(target, option) {
-
 
         var divHeader = $("#" + option.id + "divHeader");
         var divContent = $("#" + option.id + "divContent");
@@ -342,7 +351,7 @@
                     }
 
                     // register event to toggle sorting
-                    if (option.sortingEnabled != undefined && column.sortable != false) {
+                    if (option.sortingEnabled != undefined && option.sortingEnabled == true && column.sortable != false) {
                         th.click(function () {
                             toggleSortableColumn(th, column, option);
                         });
@@ -371,15 +380,14 @@
         // togle the sort direction if the active sort column is the current column
         if (currentOption.sortColumn == column.name) {
             // toggle sort direction
-            column.sort = (column.sort == "asc") ? "desc" : "asc";
+            column.sortDirection = (column.sortDirection == "asc") ? "desc" : "asc";
         } else {
             // default direction to ascending
-            column.sort = "asc"
+            column.sortDirection = "asc"
 
             // if previous sort column defined, clear it
             if (currentOption.sortColumn != undefined) {
-                $("#" + currentOption.sortColumn).removeClass("sortingUp");
-                $("#" + currentOption.sortColumn).removeClass("sortingDown");
+                clearSortStyle($("#" + currentOption.sortColumn));
             }
 
             currentOption.sortColumn = column.name;
@@ -387,11 +395,66 @@
             saveOption($("#" + option.id), currentOption);
         }
 
+        applySortDirectionStyle(targetHeader, column.sortDirection);
+
+        sort(column, currentOption);
+    }
+
+    function applySortDirectionStyle(targetHeader, sortDirection) {
         // toggle sort direction
-        switch (column.sort) {
+        switch (sortDirection) {
             case "asc": targetHeader.addClass("sortingUp"); targetHeader.removeClass("sortingDown"); break;
             case "desc": targetHeader.removeClass("sortingUp"); targetHeader.addClass("sortingDown"); break;
         }
+    }
+
+    function clearSortStyle(targetHeader) {
+        targetHeader.removeClass("sortingUp");
+        targetHeader.removeClass("sortingDown");
+    }
+
+    function sort(column, option) {
+        // if there are custom sorting rule, use it, otherwise use standard sort rule
+        if (column.customSortRule != undefined && typeof (column.customSortRule) == "function") {
+            option.contents.sort(function (item1, item2) {
+                return column.customSortRule(item1, item2, column, option);
+            });
+        } else {
+
+            // initialize sorted contents   
+            option.contents.sort(function (item1, item2) {
+                if (item1[option.sortColumn] < item2[option.sortColumn]) {
+
+                    // sorting ascending
+                    if (column.sortDirection == "asc") {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+
+                } else if (item1[option.sortColumn] > item2[option.sortColumn]) {
+
+                    // sorting ascending
+                    if (column.sortDirection == "asc") {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+
+                } else if (item1[option.sortColumn] == item2[option.sortColumn]) {
+                    return 0;
+                }
+            });
+        }
+
+        // target
+        var target = $("#" + option.id);
+
+        // save the option
+        saveOption(target, option);
+
+        // re render the grid
+        renderGrid(target, option);
     }
 
     function createBodyContent(parentContainer, option) {
@@ -429,7 +492,8 @@
 
             // Display contents if its not hidden
             if (column.hidden != true) {
-                var contentValue = content[column.name] == undefined ? "" : content[column.name];
+                // string empty if undefined and the type is not boolean. if boolean return true or false
+                var contentValue = content[column.name] == undefined ? (column.type == "boolean" ? false : "") : content[column.name];
 
                 // if the row is editable
                 if (column.displayEditor == true || isEditable == true) {
@@ -449,10 +513,20 @@
                     // display date with format dd/mm/yyyy. May not work in different culture.
                     if (column.type == "date" && typeof (contentValue) == "object") {
                         contentValue = $.datepicker.formatDate("dd/mm/yy", contentValue);
+                        var cell = $("<td>" + contentValue + "</td>").css("width", column.width);
+                        row.append(cell);
+
+                    } else if (column.type == "boolean" && typeof (contentValue) == "boolean") {
+                        var columnElement = $("<td></td").css("width", column.width);
+
+                        createEditor(columnElement, rowIndex, column, contentValue, false, option);
+                        row.append(columnElement);
+                    } else {
+                        var cell = $("<td>" + contentValue + "</td>").css("width", column.width);
+                        row.append(cell);
                     }
 
-                    var cell = $("<td>" + contentValue + "</td>").css("width", column.width);
-                    row.append(cell);
+
                 }
             }
         });
@@ -471,6 +545,16 @@
                                                 .val(contentValue);
 
                 // Append the editor to its parent content
+                targetColumn.append(columnEditor);
+                break;
+            case "boolean": columnEditor = $("<input type='checkbox'/>")
+                                                .attr("id", column.name + "[" + rowIndex + "]")
+                                                .css("width", column.width - containerMagicValue)
+                                                .attr("checked", contentValue == true)
+                                                .val(contentValue);
+                if (isEditable == false) {
+                    columnEditor.attr("disabled", true);
+                }
                 targetColumn.append(columnEditor);
                 break;
 
@@ -497,8 +581,6 @@
                 columnEditor.datepicker()
                             .val($.datepicker.formatDate('dd/mm/yy', contentValue))
                             .css("width", width);
-
-
                 break;
         }
 
@@ -546,8 +628,15 @@
         table.append(footer);
     }
 
-    function getCellValue(target, row, column) {
-        return $("[id='" + column + "[" + row + "]" + "']").val();
+    function getCellValue(target, rowIndex, columnName, option) {
+        // find the correspondence column
+        var column = findColumnDef(columnName, option);
+
+        if (column.type == "boolean") {
+            return $("[id='" + columnName + "[" + rowIndex + "]" + "']").attr('checked');
+        }
+
+        return $("[id='" + columnName + "[" + rowIndex + "]" + "']").val();
     }
 
     function findColumnDef(columnName, option) {
@@ -556,27 +645,27 @@
         }
     }
 
-    function saveCellValue(target, row, column, option) {
+    function saveCellValue(target, row, columnName, option) {
         // Get cell value
-        var cellValue = getCellValue(target, row, column);
+        var cellValue = getCellValue(target, row, columnName, option);
 
         // save the value only if the cell has value
-        if (cellValue != undefined && typeof (cellValue) == "string") {
+        if (cellValue != undefined && (typeof (cellValue) == "string" || typeof (cellValue) == "boolean")) {
 
             // Parse the value based on data type
-            var columnDef = findColumnDef(column, option);
+            var columnDef = findColumnDef(columnName, option);            
 
             switch (columnDef.type) {
                 case "number": cellValue = Number(cellValue); break;
-                // Nullable number                                                                                                          
+                // Nullable number                                                                                                                                                    
                 case "number?": cellValue = cellValue == "" ? undefined : Number(cellValue); break;
-                case "boolean": cellValue = cellValue.toLowerCase() == "true";
-                    // When the cell is set to empty string then don't save it
+                case "boolean": cellValue = cellValue == true; break;
+                // When the cell is set to empty string then don't save it            
                 case "date": cellValue = cellValue == "" ? undefined : new Date(cellValue);
             }
 
             // Save cell value to the data
-            option.contents[row][column] = cellValue;
+            option.contents[row][columnName] = cellValue;
         }
     }
 
