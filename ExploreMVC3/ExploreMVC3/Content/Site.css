@@ -3,71 +3,81 @@ The base color for this template is #5c87b2. If you'd like
 to use a different color start by replacing all instances of
 #5c87b2 with your new color.
 ----------------------------------------------------------*/
-body {
+body
+{
     background-color: #5c87b2;
     font-size: .85em;
-    font-family: "Trebuchet MS", Verdana, Helvetica, Sans-Serif;
+    font-family: "Trebuchet MS" , Verdana, Helvetica, Sans-Serif;
     margin: 0;
     padding: 0;
     color: #696969;
 }
 
-a:link {
+a:link
+{
     color: #034af3;
     text-decoration: underline;
 }
 
-a:visited {
+a:visited
+{
     color: #505abc;
 }
 
-a:hover {
+a:hover
+{
     color: #1d60ff;
     text-decoration: none;
 }
 
-a:active {
+a:active
+{
     color: #12eb87;
 }
 
-p {
+p
+{
     margin-bottom: 20px;
     line-height: 1.6em;
 }
 
-header,
-footer,
-nav,
-section {
+header, footer, nav, section
+{
     display: block;
 }
 
 /* HEADINGS   
 ----------------------------------------------------------*/
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5, h6
+{
     font-size: 1.5em;
     color: #000;
 }
 
-h1 {
+h1
+{
     font-size: 2em;
     padding-bottom: 0;
     margin-bottom: 0;
 }
 
-h2 {
+h2
+{
     padding: 0 0 10px 0;
 }
 
-h3 {
+h3
+{
     font-size: 1.2em;
 }
 
-h4 {
+h4
+{
     font-size: 1.1em;
 }
 
-h5, h6 {
+h5, h6
+{
     font-size: 1em;
 }
 
@@ -76,13 +86,15 @@ h5, h6 {
 
 /* you can specify a greater or lesser percentage for the 
 page width. Or, you can specify an exact pixel width. */
-.page {
+.page
+{
     width: 90%;
     margin-left: auto;
     margin-right: auto;
 }
 
-header, #header {
+header, #header
+{
     height: 20%;
     position: relative;
     margin-bottom: 0px;
@@ -90,7 +102,8 @@ header, #header {
     padding: 0;
 }
 
-header h1, #header h1 {
+header h1, #header h1
+{
     font-weight: bold;
     padding: 5px 0;
     margin: 0;
@@ -101,7 +114,8 @@ header h1, #header h1 {
     text-shadow: 1px 1px 2px #111;
 }
 
-#main {
+#main
+{
     padding: 30px 30px 15px 30px;
     height: 70%;
     overflow: auto;
@@ -111,8 +125,8 @@ header h1, #header h1 {
     -moz-border-radius: 4px 0 0 0;
 }
 
-footer, 
-#footer {
+footer, #footer
+{
     background-color: #fff;
     color: #999;
     padding: 10px 0;
@@ -135,20 +149,24 @@ footer,
     text-align: right;
 }*/
 
-ul#menu {    
+ul#menu
+{
     text-align: left;
 }
 
-ul#menu li {
+ul#menu li
+{
     display: inline;
     list-style: none;
 }
 
-ul#menu li ul {    
+ul#menu li ul
+{
     list-style: none;
 }
 
-ul#menu li#greeting {
+ul#menu li#greeting
+{
     padding: 10px 20px;
     font-weight: bold;
     text-decoration: none;
@@ -186,23 +204,26 @@ ul#menu li.selected a {
 /* FORM LAYOUT ELEMENTS   
 ----------------------------------------------------------*/
 
-fieldset {
+fieldset
+{
     border: 1px solid #ddd;
     padding: 0 1.4em 1.4em 1.4em;
     margin: 0 0 1.5em 0;
 }
 
-legend {
+legend
+{
     font-size: 1.2em;
     font-weight: bold;
 }
 
-textarea {
+textarea
+{
     min-height: 75px;
 }
 
-input[type="text"], 
-input[type="password"] {
+input[type="text"], input[type="password"]
+{
     border: 1px solid #ccc;
     padding: 2px;
     font-size: 1.2em;
@@ -210,14 +231,16 @@ input[type="password"] {
     width: 200px;
 }
 
-select {
+select
+{
     border: 1px solid #ccc;
     padding: 2px;
     font-size: 1.2em;
     color: #444;
 }
 
-input[type="submit"] {
+input[type="submit"]
+{
     font-size: 1.2em;
     padding: 5px;
 }
@@ -225,18 +248,28 @@ input[type="submit"] {
 /* TABLE
 ----------------------------------------------------------*/
 
-table {
+table
+{
     border: solid 1px #e8eef4;
-    border-collapse: collapse;    
+    border-collapse: collapse;
 }
 
-table td 
-{    
+table td
+{
     padding: 5px;
     border: solid 1px #e8eef4;
 }
 
-table th {
+table th
+{
+    padding: 5px;
+    text-align: left;
+    background-color: #e8eef4;
+    border: solid 1px #e8eef4;
+}
+
+table tfoot td
+{
     padding: 5px;
     text-align: left;
     background-color: #e8eef4;
@@ -249,94 +282,108 @@ table th:hover, table th.sortingUp:hover, table th.sortingDown:hover
 }
 
 
-table th.sortingUp {
+table th.sortingUp
+{
     padding: 5px;
     text-align: left;
     background-color: #e8eef4;
-    border: solid 1px #e8eef4;    
-    
+    border: solid 1px #e8eef4;
     background-image: url(images/asc.gif);
     background-repeat: no-repeat;
     background-position: center right;
     cursor: pointer;
 }
 
-table th.sortingDown {
+table th.sortingDown
+{
     padding: 5px;
     text-align: left;
     background-color: #e8eef4;
     border: solid 1px #e8eef4;
-    
     background-image: url(images/desc.gif);
     background-repeat: no-repeat;
     background-position: center right;
     cursor: pointer;
 }
 
-
-.emptyTable {
+.emptyTable
+{
     border: solid 1px #e8eef4;
     border-collapse: collapse;
 }
 
-table.tablesorter {	
+table.tablesorter
+{
 }
 
-table.tablesorter thead tr th, table.tablesorter tfoot tr th {
-	background-color: #e6EEEE;
+table.tablesorter thead tr th, table.tablesorter tfoot tr th
+{
+    background-color: #e6EEEE;
 }
 
-table.tablesorter thead tr .header {	
-	background-repeat: no-repeat;
-	background-position: center right;
-	cursor: pointer;
+table.tablesorter thead tr .header
+{
+    background-repeat: no-repeat;
+    background-position: center right;
+    cursor: pointer;
 }
 
-table.tablesorter tbody td {
-	color: #3D3D3D;
-	padding: 4px;
-	background-color: #FFF;
-	vertical-align: top;
+table.tablesorter tbody td
+{
+    color: #3D3D3D;
+    padding: 4px;
+    background-color: #FFF;
+    vertical-align: top;
 }
-table.tablesorter tbody tr.odd td {
-	background-color:#F0F0F6;
+table.tablesorter tbody tr.odd td
+{
+    background-color: #F0F0F6;
 }
-table.tablesorter thead tr .headerSortUp {
-	background-image: url(images/asc.gif);
+table.tablesorter thead tr .headerSortUp
+{
+    background-image: url(images/asc.gif);
 }
-table.tablesorter thead tr .headerSortDown {
-	background-image: url(images/desc.gif);
+table.tablesorter thead tr .headerSortDown
+{
+    background-image: url(images/desc.gif);
 }
-table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
+table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp
+{
     background-color: #8dbdd8;
 }
 
 /* MISC  
 ----------------------------------------------------------*/
-.clear {
+.clear
+{
     clear: both;
 }
 
-.error {
+.error
+{
     color: Red;
 }
 
-nav {
+nav
+{
     margin-top: 40px;
 }
 
-#menucontainer {
+#menucontainer
+{
     clear: left;
     margin-top: 10px;
 }
 
-div#title {
+div#title
+{
     display: block;
     float: left;
     text-align: left;
 }
 
-#logindisplay {
+#logindisplay
+{
     font-size: 1.1em;
     display: block;
     text-align: right;
@@ -344,73 +391,85 @@ div#title {
     color: White;
 }
 
-#logindisplay a:link {
+#logindisplay a:link
+{
     color: white;
     text-decoration: underline;
 }
 
-#logindisplay a:visited {
+#logindisplay a:visited
+{
     color: white;
     text-decoration: underline;
 }
 
-#logindisplay a:hover {
+#logindisplay a:hover
+{
     color: white;
     text-decoration: none;
 }
 
 /* Styles for validation helpers
 -----------------------------------------------------------*/
-.field-validation-error {
+.field-validation-error
+{
     color: #ff0000;
 }
 
-.field-validation-valid {
+.field-validation-valid
+{
     display: none;
 }
 
-.input-validation-error {
+.input-validation-error
+{
     border: 1px solid #ff0000;
     background-color: #ffeeee;
 }
 
-.validation-summary-errors {
+.validation-summary-errors
+{
     font-weight: bold;
     color: #ff0000;
 }
 
-.validation-summary-valid {
+.validation-summary-valid
+{
     display: none;
 }
 
 /* Styles for editor and display helpers
 ----------------------------------------------------------*/
-.display-container {
+.display-container
+{
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
-.display-label, 
-.editor-label {
+.display-label, .editor-label
+{
     float: left;
-    width: 100px;    
-    margin-bottom: 10px;    
+    width: 100px;
+    margin-bottom: 10px;
 }
 
-.display-field, 
-.editor-field {
+.display-field, .editor-field
+{
     float: left;
     margin-bottom: 10px;
 }
 
-.text-box {
+.text-box
+{
     width: 30em;
 }
 
-.text-box.multi-line {
+.text-box.multi-line
+{
     height: 6.5em;
 }
 
-.tri-state {
+.tri-state
+{
     width: 6em;
 }
