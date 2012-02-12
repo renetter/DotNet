@@ -252,6 +252,7 @@
 
     function createTableElement(option) {
         var tableElement = $("<table></table>").css("table-layout", "fixed");
+        tableElement.addClass("grid");
 
         return tableElement;
     }
@@ -653,14 +654,14 @@
         if (cellValue != undefined && (typeof (cellValue) == "string" || typeof (cellValue) == "boolean")) {
 
             // Parse the value based on data type
-            var columnDef = findColumnDef(columnName, option);            
+            var columnDef = findColumnDef(columnName, option);
 
             switch (columnDef.type) {
                 case "number": cellValue = Number(cellValue); break;
-                // Nullable number                                                                                                                                                    
+                // Nullable number                                                                                                                                                       
                 case "number?": cellValue = cellValue == "" ? undefined : Number(cellValue); break;
                 case "boolean": cellValue = cellValue == true; break;
-                // When the cell is set to empty string then don't save it            
+                // When the cell is set to empty string then don't save it               
                 case "date": cellValue = cellValue == "" ? undefined : new Date(cellValue);
             }
 
