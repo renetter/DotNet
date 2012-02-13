@@ -34,22 +34,21 @@
         },
 
         render: function (newOption) {
+            var option;
+
             if (newOption != undefined) {
+                option = newOption;
+                
                 // save the option to the target
-                saveOption(this, newOption);
-
-                // Render the grid based on option
-                renderGrid(this, newOption);
-
-                return this;
+                saveOption(this, newOption);                
 
             } else {
                 // obtain the grid option
-                var option = getOption(this);
-
-                // Render the grid based on option
-                renderGrid(this, option);
+                option = getOption(this);
             }
+
+            // Render the grid based on option
+            renderGrid(this, option);
 
             return this;
         },
@@ -125,6 +124,10 @@
             var option = getOption(this);
             var target = this;
 
+            // display empty grid first
+            option.contents = [];
+            renderContents(this, option);
+
             // Get the contents from url
             if (typeof (contents) == "string") {
                 $.ajax({ url: contents,
@@ -134,21 +137,21 @@
                         option.contents = returnValue;
                         saveOption(target, option);
 
-                        renderGrid(target, option);
+                        renderContents(target, option);
                     },
                     error: function () {
                         // empty the contents
                         option.contents = [];
                         saveOption(target, option);
 
-                        renderGrid(target, option);
+                        renderContents(target, option);
                     }
                 });
             } else {
                 option.contents = contents;
                 saveOption(this, option);
 
-                renderGrid(this, option);
+                renderContents(this, option);
             }
 
             return this;
@@ -223,7 +226,7 @@
 
         // Create body content if exists
         if (option.contents != undefined) {
-            createBodyContent(target, option);
+            createDivBodyContent(target, option);
         }
 
         // Create footer if exists
@@ -299,21 +302,27 @@
 
         // if the table is scrollable
         if (option.scrollable == true) {
+            divContent.css("overflow-y", "scroll");            
+
             if (option.height != null && option.height < tableContent.outerHeight()) {
                 divContent.css("height", option.height);
-            }
 
-            divContent.css("overflow-y", "scroll");
+                // check if the content is empty then add new empty row
+                if (option.contents.length == 0) {
+                    displayEmptyContents(divContent, width);
+                }
+            }            
+        } else {
+            divContent.css("overflow-y", "none");
+        }                               
+    }
 
-            // check if the content is empty then add new empty row
-            if (option.contents.length == 0) {
-                // set div with based on header width
-                divContent.width(width - 2);
+    function displayEmptyContents(divContent, width, height) {
+        // set div with based on header width
+        divContent.width(width - 2);
 
-                // show border
-                divContent.addClass("emptyTable");
-            }
-        }
+        // show border
+        divContent.addClass("emptyTable");        
     }
 
     function createHeader(parentContainer, option) {
@@ -458,11 +467,44 @@
         renderGrid(target, option);
     }
 
-    function createBodyContent(parentContainer, option) {
+    function createDivBodyContent(parentContainer, option) {
         // create div
         var div = createDivElement(option);
-        div.attr("id", option.id + "divContent");
+        div.attr("id", option.id + "divContent");        
 
+        parentContainer.append(div);
+
+        createTableContent(div, option);
+        
+        if (option.afterContentLoaded != undefined && typeof (option.afterContentLoaded) == "function") {
+            option.afterContentLoaded(option);
+        }
+    }
+
+    function renderContents(target, option) {
+        var divContents = $("#" + option.id + "divContent");
+
+        createTableContent(divContents, option);
+
+        if (option.afterContentLoaded != undefined && typeof (option.afterContentLoaded) == "function") {
+            option.afterContentLoaded(option);
+        }
+
+        renderFooter(target, option);
+
+        fixDivWidth(target, option);
+    }
+
+    function renderFooter(target, option) {
+        var divFooter = $("#" + option.id + "divFooter");
+
+        createTableFooter(divFooter, option);
+    }
+    
+    function createTableContent(parentContainer, option) {
+        // clear the parent container
+        parentContainer.empty();
+        
         // create table
         var table = createTableElement(option);
         table.attr("id", option.id + "tableContent");
@@ -470,8 +512,7 @@
         // create body element
         var body = $("<tbody></tbody>");
 
-        parentContainer.append(div);
-        div.append(table);
+        parentContainer.append(table);
         table.append(body);
 
         $.each(option.contents, function (rowIndex, content) {
@@ -481,10 +522,6 @@
             // render column contents
             createRowContents(row, rowIndex, option, content);
         });
-
-        if (option.afterContentLoaded != undefined && typeof (option.afterContentLoaded) == "function") {
-            option.afterContentLoaded(option);
-        }
     }
 
     function createRowContents(row, rowIndex, option, content, isEditable) {
@@ -658,18 +695,16 @@
         return columnEditor;
     }
 
-    function createFooter(parentContainer, option) {
-        // create div
-        var div = createDivElement(option);
-        div.attr("id", option.id + "divFooter");
-
+    function createTableFooter(parentContainer, option) {
+        // clear parent container
+        parentContainer.empty();
+        
         var table = createTableElement(option);
         table.attr("id", option.id + "tableFooter");
 
         // append table
-        div.append(table);
-        table.append(footer);
-        parentContainer.append(div);
+        parentContainer.append(table);
+        table.append(footer);        
 
         // create footer element
         var footer = $("<tfoot></tfoot>");
@@ -697,6 +732,16 @@
         });
 
         table.append(footer);
+    }
+
+    function createFooter(parentContainer, option) {
+        // create div
+        var div = createDivElement(option);
+        div.attr("id", option.id + "divFooter");
+
+        parentContainer.append(div);
+
+        createTableFooter(div, option); 
     }
 
     function getCellValue(target, rowIndex, columnName, option) {

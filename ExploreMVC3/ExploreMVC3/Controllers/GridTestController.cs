@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Threading;
 
 namespace ExploreMVC3.Controllers
 {
@@ -34,6 +35,9 @@ namespace ExploreMVC3.Controllers
             {
                 dynamicContent.Add(new { Month = months[random.Next(11)], Income = random.Next(1000), Expenditure = random.Next(1000) });
             }
+
+            // simulate database reading
+            Thread.Sleep(2000);
 
             return Json(dynamicContent);
         }

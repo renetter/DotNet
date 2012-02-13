@@ -9,6 +9,7 @@
 <input id="reloadFromUrl" type="button" value="Reload from Url" />
 <input id="newColumn" type="button" value="Add Column" />
 <input id="showHideHidden" type="button" value="Show/Hide hidden column" />
+<input id="setScollable" type="button" value="Toggle Scrollable" />
 
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dynamicgrid.0.1.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.tablesorter.js")"></script>
@@ -19,11 +20,13 @@
                   "July", "August", "September",
                   "October", "November", "December"]
 
+    var scrollable = false;
+
     $(document).ready(function () {
 
         $("#target").dynamicGrid({
             sortingEnabled: true,
-            scrollable: true,
+            scrollable: false,
             height: 100,
             columns: [{ name: "Month", display: "Month", width: 150, align: "center", type: "string", sortable: true, customSortRule: sortMonths,
                 dropdownListItems: [{ text: "January", value: "January" }, { text: "Febuary", value: "Febuary" }, { text: "March", value: "March" },
@@ -48,7 +51,17 @@
         $("#reloadFromUrl").click(reloadFromUrl);
         $("#newColumn").click(addColumn);
         $("#showHideHidden").click(showHideHiddenColumn);
+        $("#setScollable").click(setScrollable);
     });
+
+    function setScrollable() {
+        var targetGrid = $("#target");
+
+        scrollable = !scrollable;
+
+        targetGrid.dynamicGrid('setProperty', 'scrollable', scrollable);
+        targetGrid.dynamicGrid('render');
+    }
 
     function sortMonths(item1, item2, column) {
         var item1Index = months.indexOf(item1[column.name]);

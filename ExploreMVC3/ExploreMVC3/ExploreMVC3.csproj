@@ -110,6 +110,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\images\asc.gif" />
+    <Content Include="Content\images\bg.gif" />
+    <Content Include="Content\images\calendar.gif" />
+    <Content Include="Content\images\calendar.jpeg" />
+    <Content Include="Content\images\desc.gif" />
+    <Content Include="Content\images\loading.gif" />
+    <Content Include="Content\images\pagingBtn.gif" />
+    <Content Include="Content\images\search.gif" />
     <Content Include="Content\menu\dcmegamenu.css" />
     <Content Include="Content\menu\skins\black.css" />
     <Content Include="Content\menu\skins\blue.css" />
@@ -224,7 +232,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\images\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
