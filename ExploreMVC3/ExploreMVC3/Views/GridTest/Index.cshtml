@@ -7,9 +7,13 @@
 </div>
 <input id="reload" type="button" value="Reload" />
 <input id="reloadFromUrl" type="button" value="Reload from Url" />
+<input id="newRow" type="button" value="New Row" />
 <input id="newColumn" type="button" value="Add Column" />
 <input id="showHideHidden" type="button" value="Show/Hide hidden column" />
 <input id="setScollable" type="button" value="Toggle Scrollable" />
+<input id="showHideHeader" type="button" value="Toggle Header" />
+<input id="showHideFooter" type="button" value="Toggle Footer" />
+
 
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dynamicgrid.0.1.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.tablesorter.js")"></script>
@@ -21,6 +25,8 @@
                   "October", "November", "December"]
 
     var scrollable = false;
+    var showHeader = true;
+    var showFooter = true;
 
     $(document).ready(function () {
 
@@ -40,8 +46,7 @@
                       { name: "Audit", width: 400, align: "center", type: "date" },
                       { name: "Approved", width: 80, align: "center", type: "boolean" },
                       { name: "Success", width: 80, align: "center", type: "boolean", dropdownListItems: [{ text: "yes", value: true }, { text: "no", value: false}] },
-                      { name: "Edit", display: "", width: 120, customEditor: displayEditButton, displayEditor: true, sortable: false}],
-            contents: [{ Month: "January", Income: 100, Expenditure: 50, Approved: true}],
+                      { name: "Edit", display: "", width: 170, customEditor: displayEditButton, displayEditor: true, sortable: false}],            
             footer: [{ Month: "<B>Total</B>"}],
             afterContentLoaded: calculateTotal,
             afterSaveContent: afterSaveContent
@@ -49,10 +54,40 @@
 
         $("#reload").click(reloadGrid);
         $("#reloadFromUrl").click(reloadFromUrl);
+        $("#newRow").click(addNewRow);
         $("#newColumn").click(addColumn);
         $("#showHideHidden").click(showHideHiddenColumn);
         $("#setScollable").click(setScrollable);
+        $("#showHideHeader").click(showHideHeader);
+        $("#showHideFooter").click(showHideFooter);
     });
+
+    function showHideHeader() {
+        var targetGrid = $("#target");
+
+        showHeader = !showHeader;
+
+        targetGrid.dynamicGrid('setProperty', 'scrollable', showHeader);
+        targetGrid.dynamicGrid('render');
+    }
+
+    function showHideHeader() {
+        var targetGrid = $("#target");
+
+        showHeader = !showHeader;
+
+        targetGrid.dynamicGrid('setProperty', 'showHeader', showHeader);
+        targetGrid.dynamicGrid('render');
+    }
+
+    function showHideFooter() {
+        var targetGrid = $("#target");
+
+        showFooter = !showFooter;
+
+        targetGrid.dynamicGrid('setProperty', 'showFooter', showFooter);
+        targetGrid.dynamicGrid('render');
+    }
 
     function setScrollable() {
         var targetGrid = $("#target");
@@ -93,7 +128,7 @@
     }
 
     function addColumn() {
-        var target = $("#target");
+        var target = $("#target"); 
         target.dynamicGrid('addColumn', { name: "NewColumn", display: "New Column", width: "100px", align: "center" });
         target.dynamicGrid('render');
     }
@@ -133,6 +168,18 @@
         target.dynamicGrid('setRowEditable', rowIndex, false);
     }
 
+    function deleteRow(rowIndex) {
+        var target = $("#target");
+        target.dynamicGrid('deleteRow', rowIndex);
+        target.dynamicGrid('render');
+    }
+
+    function addNewRow() {
+        var target = $("#target");
+        target.dynamicGrid('addRow', { Income: 0, Expenditure: 0, Profit: 0 });
+        target.dynamicGrid('render');
+    }
+
     function displayEditButton(targetColumn, rowIndex, column) {
         var span = $("<span />").attr("id", column.name + "[" + rowIndex + "]")
         var editButton = $("<input type='button'/>")
@@ -143,8 +190,13 @@
                             .val("Save")
                             .click(function () { saveRow(rowIndex) });
 
+        var deleteButton = $("<input type='button'/>")
+                            .val("Delete")
+                            .click(function () { deleteRow(rowIndex) });
+
         span.append(editButton);
         span.append(saveButton);
+        span.append(deleteButton);
 
         targetColumn.append(span);
     }

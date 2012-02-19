@@ -280,6 +280,23 @@ table.grid th:hover, table th.sortingUp:hover, table th.sortingDown:hover
     background-color: #97B2CD;
 }
 
+table.grid tbody tr:hover 
+{
+    background-color: #FBFCE4;
+}
+
+/* Zebra even 
+table.grid tbody tr:nth-child(2n)
+{
+    background-color: #FBFCE4;
+}
+
+/* Zebra odds 
+table.grid tbody tr:nth-child(2n+1)
+{
+    background-color: #FFFFFF;
+}
+*/
 
 table.grid th.sortingUp
 {

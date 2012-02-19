@@ -2,9 +2,25 @@
     var emptyColumnMagicNumber = 7;
     var containerMagicValue = 6;
     var columnMagicNumber = 2;
+    var defaultDateFormat = "dd/mm/yyyy";
+
+    // default grid option
+    var defaultGridOption = {
+        sortingEnabled: false,
+        scrollable: false,
+        showHeader: true,
+        showFooter: true,
+        height: 100,
+        columns: [],
+        contents: [],
+        footer: []
+    }
 
     var dynamicGrid = {
         init: function (option) {
+            // set the default value
+            option = $.extend(defaultGridOption, option);
+
             // save the target id
             option.id = this.attr("id");
 
@@ -16,7 +32,7 @@
 
             var $this = this;
 
-            // To fix the width we have to render again, only executes when page refresh
+            // To fix the width we have to render again, only executes after page refreshed
             $(window).load(function () { renderGrid($this, option) });
 
             return this;
@@ -38,9 +54,9 @@
 
             if (newOption != undefined) {
                 option = newOption;
-                
+
                 // save the option to the target
-                saveOption(this, newOption);                
+                saveOption(this, newOption);
 
             } else {
                 // obtain the grid option
@@ -62,6 +78,42 @@
             saveOption(this, option);
 
             return this;
+        },
+
+        getContents: function (row) {
+            var option = getOption(this);
+
+            if (row == undefined) {
+                return option.contents;
+            } else if (option.contents.length - 1 >= row) {
+                return option.contents[row];
+            }
+        },
+
+        deleteRow: function (row) {
+            // obtain grid options
+            var option = getOption(this);
+
+            if (row != undefined && option.contents.length - 1 >= row) {
+                var deletedRow = option.contents.splice(row, 1);
+
+                saveOption(this, option);
+
+                return deletedRow;
+            }
+        },
+
+        addRow: function (newRowData) {
+            // obtain grid options
+            var option = getOption(this);
+
+            if (newRowData != undefined) {
+                option.contents.push(newRowData);
+            } else {
+                option.contents.push(new Object());
+            }
+
+            saveOption(this, option);
         },
 
         save: function (row, column) {
@@ -124,9 +176,8 @@
             var option = getOption(this);
             var target = this;
 
-            // display empty grid first
-            option.contents = [];
-            renderContents(this, option);
+            // Display animation to wait loading
+            renderWaitAnimation(this, option);
 
             // Get the contents from url
             if (typeof (contents) == "string") {
@@ -218,9 +269,6 @@
         // Clear the target elements
         target.empty();
 
-        // Make show the scrollbar when the column is overflow
-        target.css("overflow-x", "auto");
-
         // Create header
         createHeader(target, option);
 
@@ -240,7 +288,7 @@
 
     function postRenderInitialization(target, option) {
         // Calculate correct width for header/contents/footer
-        fixDivWidth(target, option);
+        fixLayout(target, option);
 
         // Show the sorting icon
         if (option.sortingEnabled) {
@@ -283,7 +331,13 @@
         return width;
     }
 
-    function fixDivWidth(target, option) {
+    function fixLayout(target, option) {
+
+        // clear the target style
+        target.removeAttr("style");
+
+        // Make show the scrollbar when the column is overflow
+        target.css("overflow-x", "auto");
 
         var divHeader = $("#" + option.id + "divHeader");
         var divContent = $("#" + option.id + "divContent");
@@ -293,6 +347,14 @@
         var tableContent = $("#" + option.id + "tableContent");
         var tableFooter = $("#" + option.id + "tableFooter");
 
+        // show then hide the header later if showHeader is false
+        if (option.showHeader == false) {
+            divHeader.show();
+        }
+
+        // Clear the content style
+        divContent.removeAttr("style");
+
         var width = tableHeader.outerWidth();
 
         // set div with based on header width
@@ -300,29 +362,40 @@
         divHeader.width(width + columnMagicNumber);
         divFooter.width(width + columnMagicNumber);
 
+        // hide the header if showHeader is false
+        if (option.showHeader == false) {
+            divHeader.hide();
+        }
+
         // if the table is scrollable
         if (option.scrollable == true) {
-            divContent.css("overflow-y", "scroll");            
+            divContent.css("overflow-y", "scroll");
 
             if (option.height != null && option.height < tableContent.outerHeight()) {
                 divContent.css("height", option.height);
-
-                // check if the content is empty then add new empty row
-                if (option.contents.length == 0) {
-                    displayEmptyContents(divContent, width);
-                }
-            }            
+            }
         } else {
             divContent.css("overflow-y", "none");
-        }                               
+        }
+
+        // remove the empty table class
+        divContent.removeClass("emptyTable");
+
+        // check if the content is empty then add new empty row
+        if (option.contents.length == 0) {
+            displayEmptyContents(divContent, width);
+        }
     }
 
-    function displayEmptyContents(divContent, width, height) {
+    function displayEmptyContents(divContent, width) {
+        // set height default to 50 pixel if undefined
+        divContent.css("height", 50);
+
         // set div with based on header width
         divContent.width(width - 2);
 
         // show border
-        divContent.addClass("emptyTable");        
+        divContent.addClass("emptyTable");
     }
 
     function createHeader(parentContainer, option) {
@@ -470,12 +543,12 @@
     function createDivBodyContent(parentContainer, option) {
         // create div
         var div = createDivElement(option);
-        div.attr("id", option.id + "divContent");        
+        div.attr("id", option.id + "divContent");
 
         parentContainer.append(div);
 
         createTableContent(div, option);
-        
+
         if (option.afterContentLoaded != undefined && typeof (option.afterContentLoaded) == "function") {
             option.afterContentLoaded(option);
         }
@@ -492,19 +565,64 @@
 
         renderFooter(target, option);
 
-        fixDivWidth(target, option);
+        fixLayout(target, option);
+    }
+
+    function renderWaitAnimation(target, option) {
+        var divHeader = $("#" + option.id + "divHeader");
+        var divContent = $("#" + option.id + "divContent");
+        var tableHeader = $("#" + option.id + "tableHeader");
+
+        if (option.showHeader == false) {
+            // show first then hide later
+            divHeader.show();
+        }
+
+        // Clear the content
+        divContent.removeAttr("style");
+        divContent.empty();
+
+        var width = tableHeader.outerWidth();
+
+        // set div with based on header width
+        divContent.width(width);
+
+        if (option.showHeader == false) {
+            // show first then hide later
+            divHeader.hide();
+        }
+
+        // if the table is scrollable
+        if (option.scrollable == true) {
+            divContent.css("overflow-y", "scroll");
+        } else {
+            divContent.css("overflow-y", "none");
+        }
+
+        displayEmptyContents(divContent, width);
+
+        divContent.attr("align", "center");
+
+        var image = $("<img src='../Content/images/loading.gif'></img>");
+        divContent.append(image);
     }
 
     function renderFooter(target, option) {
         var divFooter = $("#" + option.id + "divFooter");
 
+        if (option.showFooter == false) {
+            divFooter.hide();
+        } else {
+            divFooter.show();
+        }
+
         createTableFooter(divFooter, option);
     }
-    
+
     function createTableContent(parentContainer, option) {
         // clear the parent container
         parentContainer.empty();
-        
+
         // create table
         var table = createTableElement(option);
         table.attr("id", option.id + "tableContent");
@@ -551,7 +669,7 @@
                 row.append(columnElement);
             } else {
                 // display dropdownList if the dropdown list value is defined and the object type is array
-                if (column.dropdownListItems != undefined && Array.isArray(column.dropdownListItems)) {
+                if (column.dropdownListItems != undefined && column.dropdownListItems.length > 0) {
                     createDropdownListCell(row, rowIndex, column, contentValue, option);
                 } else if (column.type == "date" && typeof (contentValue) == "object") {
                     // display date with format dd/mm/yyyy. May not work in different culture.
@@ -592,7 +710,7 @@
 
     function createEditor(targetColumn, rowIndex, column, contentValue, isEditable, option) {
         // display dropdownList if the dropdown list value is defined and the object type is array
-        if (column.dropdownListItems != undefined && Array.isArray(column.dropdownListItems)) {
+        if (column.dropdownListItems != undefined && column.dropdownListItems.length > 0) {
             return createDropdownList(targetColumn, rowIndex, column, contentValue, isEditable);
         }
 
@@ -649,20 +767,21 @@
         var columnEditor = $("<input type='textbox'/>")
                               .attr("id", column.name + "[" + rowIndex + "]");
 
-        // Append the editor to its parent content
+        // Append the editor to its parent content, so the width can be calculated
         targetColumn.append(columnEditor);
 
         $("#" + option.id).append(dateLabel);
 
         var width = column.width - dateLabel.outerWidth() - containerMagicValue;
 
+        // remove the temporary span from its parent content
         $("#" + option.id).children(":last").remove();
 
         // Append the date time format
         targetColumn.append(dateLabel);
 
         // Init date picker and assign value with date formatting
-        columnEditor.datepicker()
+        columnEditor.datepicker({ dateFormat: 'dd/mm/yy' })
                     .val($.datepicker.formatDate('dd/mm/yy', contentValue))
                     .css("width", width);
 
@@ -698,13 +817,13 @@
     function createTableFooter(parentContainer, option) {
         // clear parent container
         parentContainer.empty();
-        
+
         var table = createTableElement(option);
         table.attr("id", option.id + "tableFooter");
 
         // append table
         parentContainer.append(table);
-        table.append(footer);        
+        table.append(footer);
 
         // create footer element
         var footer = $("<tfoot></tfoot>");
@@ -741,7 +860,13 @@
 
         parentContainer.append(div);
 
-        createTableFooter(div, option); 
+        createTableFooter(div, option);
+
+        if (option.showFooter == false) {
+            div.hide();
+        } else {
+            div.show();
+        }
     }
 
     function getCellValue(target, rowIndex, columnName, option) {
@@ -773,16 +898,31 @@
 
             switch (columnDef.type) {
                 case "number": cellValue = Number(cellValue); break;
-                // Nullable number                                                                                                                                                                                     
+                // Nullable number                                                                                                                                                                                                                                
                 case "number?": cellValue = cellValue == "" ? undefined : Number(cellValue); break;
                 case "boolean": cellValue = cellValue == true || cellValue == "true"; break;
-                // When the cell is set to empty string then don't save it                                             
-                case "date": cellValue = cellValue == "" ? undefined : new Date(cellValue);
+                // When the cell is set to empty string then don't save it                                                                                        
+                case "date": cellValue = parseDate(defaultDateFormat, cellValue);
             }
 
             // Save cell value to the data
             option.contents[row][columnName] = cellValue;
         }
+    }
+
+    function parseDate(dateFormat, value) {
+        // dateFormat still unused, will be implemented later
+
+        // return undefined if the value is empty
+        if (value == "") {
+            return undefined;
+        }
+
+        // split string by the "/" delimiter
+        var datePart = value.split("/");
+
+        // initialize the date based on the date part
+        return new Date(datePart[2], datePart[1] - 1, datePart[0]);
     }
 
     function saveRowValue(target, rowNumber, option) {
