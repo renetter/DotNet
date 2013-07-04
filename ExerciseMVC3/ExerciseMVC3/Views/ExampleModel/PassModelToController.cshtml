@@ -1,0 +1,16 @@
+﻿@model ExerciseMVC3.Controllers.Customer
+
+@{
+    ViewBag.Title = "PassModelToController";
+}
+
+<h2>PassModelToController</h2>
+
+<fieldset>
+    <div>@Html.Label("Name") :</div>
+    <div>@Model.Name</div>
+    <div>@Html.Label("Address") :</div>
+    <div>@Model.Address</div>
+    <div>@Html.Label("Deposit") :</div>
+    <div>@Model.Deposit</div>
+</fieldset>

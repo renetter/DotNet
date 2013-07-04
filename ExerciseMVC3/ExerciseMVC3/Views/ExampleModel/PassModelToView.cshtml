@@ -1,0 +1,20 @@
+﻿@model ExerciseMVC3.Controllers.Customer
+@{
+    ViewBag.Title = "PassModelToView";
+}
+
+<h2>PassModelToView</h2>
+
+<form action="@Url.Action("PassModelToController")" method="post">
+    <fieldset>
+        <div>@Html.LabelFor(c => c.Name, "Name")</div>
+        <div>@Html.TextBoxFor(c => c.Name)</div>
+        <div>@Html.LabelFor(c => c.Address)</div>
+        <div>@Html.TextBoxFor(c => c.Address)</div>
+        <div>@Html.LabelFor(c => c.Deposit)</div>
+        <div>@Html.TextBoxFor(c => c.Deposit)</div>
+        <div>
+            <input type="submit" value="Submit"/>
+        </div>
+    </fieldset>
+</form>

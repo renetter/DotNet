@@ -1,0 +1,28 @@
+﻿@model ExerciseMVC3.Controllers.Customer
+
+@{
+    ViewBag.Title = "ModelValidation";
+}
+
+<h2>ModelValidation</h2>
+
+<div>
+    @Html.ValidationSummary()
+</div>
+
+<form action="@Url.Action("ModelValidation")" method="post">
+    <fieldset>
+        <div>@Html.LabelFor(c => c.Name, "Name")</div>
+        <div>@Html.TextBoxFor(c => c.Name)</div>
+        <div>@Html.ValidationMessageFor(c => c.Name)</div>
+        <div>@Html.LabelFor(c => c.Address)</div>
+        <div>@Html.TextBoxFor(c => c.Address)</div>
+        <div>@Html.ValidationMessageFor(c => c.Address)</div>
+        <div>@Html.LabelFor(c => c.Deposit)</div>
+        <div>@Html.TextBoxFor(c => c.Deposit)</div>
+        <div>@Html.ValidationMessageFor(c => c.Deposit)</div>
+        <div>
+            <input type="submit" value="Submit"/>
+        </div>
+    </fieldset>
+</form>

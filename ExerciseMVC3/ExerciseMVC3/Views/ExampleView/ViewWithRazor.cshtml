@@ -1,0 +1,28 @@
+﻿@{
+    ViewBag.Title = "ViewWithRazor";
+}
+
+<h2>Example View With razor</h2>
+
+@{
+    var greetings = new List<string> {"Morning", "Selamat Pagi", "Bonjour"};
+}
+
+<b>Greetings:</b>
+<ul>
+    @foreach (var greeting in greetings)
+    {
+        <li>@greeting</li>
+    }
+</ul>
+
+<script type="text/javascript">
+    $.ajax({
+        url : '@Url.Action("Example3", "Example")',
+        type : "GET",
+        dataType: "json",
+        success: function(result) {
+            alert("I have receive : " + result.Message);
+        }
+    })    
+</script>

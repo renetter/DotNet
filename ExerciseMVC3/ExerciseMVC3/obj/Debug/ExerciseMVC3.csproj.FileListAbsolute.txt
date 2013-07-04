@@ -1,0 +1,7 @@
+D:\Work\Github\DotNet\ExerciseMVC3\ExerciseMVC3\bin\ExerciseMVC3.dll
+D:\Work\Github\DotNet\ExerciseMVC3\ExerciseMVC3\bin\ExerciseMVC3.pdb
+D:\Work\Github\DotNet\ExerciseMVC3\ExerciseMVC3\bin\EntityFramework.dll
+D:\Work\Github\DotNet\ExerciseMVC3\ExerciseMVC3\bin\EntityFramework.xml
+D:\Work\Github\DotNet\ExerciseMVC3\ExerciseMVC3\obj\Debug\ResolveAssemblyReference.cache
+D:\Work\Github\DotNet\ExerciseMVC3\ExerciseMVC3\obj\Debug\ExerciseMVC3.dll
+D:\Work\Github\DotNet\ExerciseMVC3\ExerciseMVC3\obj\Debug\ExerciseMVC3.pdb
